@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<title>Lab: curl and web requests</title>
+<meta name="author" content="(David Raynes)"/>
+<link rel="stylesheet" href="./reveal.js/css/reveal.css"/>
+<link rel="stylesheet" href="./reveal.js/css/theme/moon.css" id="theme"/>
+<link rel="stylesheet" href=""/>
+<!-- If the query includes 'print-pdf', include the PDF print sheet -->
+<script>
+    if( window.location.search.match( /print-pdf/gi ) ) {
+        var link = document.createElement( 'link' );
+        link.rel = 'stylesheet';
+        link.type = 'text/css';
+        link.href = './reveal.js/css/print/pdf.css';
+        document.getElementsByTagName( 'head' )[0].appendChild( link );
+    }
+</script>
+</head>
+<body>
+<div class="reveal">
+<div class="slides">
+<section id="sec-title-slide">
+<h1>Lab: curl and web requests</h1>
+<h2>David Raynes</h2>
+<h2><a href="mailto:rayners@gmail.com">rayners@gmail.com</a></h2>
+<h2></h2>
+</section>
+<section id="table-of-contents">
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#/slide-orgheadline1">1. Install curl</a></li>
+<li><a href="#/slide-orgheadline5">2. Let's make some requests!</a>
+<ul>
+<li><a href="#/slide-orgheadline2">2.1. <code>GET</code> <code>http://google.com</code></a></li>
+<li><a href="#/slide-orgheadline3">2.2. <code>GET</code> <code>http://www.google.com</code></a></li>
+<li><a href="#/slide-orgheadline4">2.3. <code>GET</code> <code>https://www.google.com</code></a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</section>
+
+<section>
+<section id="slide-orgheadline1">
+<h2 id="orgheadline1"><span class="section-number-2">1</span> Install curl</h2>
+<p>
+It comes installed already on OSX and has a ton of
+options<sup><a id="fnr.1" class="footref" href="#fn.1">1</a></sup>. Run <code>curl --help</code> on the command line and
+take a skim through them.
+</p>
+
+</section>
+</section>
+<section>
+<section id="slide-orgheadline5">
+<h2 id="orgheadline5"><span class="section-number-2">2</span> Let's make some requests!</h2>
+<div class="outline-text-2" id="text-2">
+</div></section>
+<section id="slide-orgheadline2">
+<h3 id="orgheadline2"><span class="section-number-3">2.1</span> <code>GET</code> <code>http://google.com</code></h3>
+<p>
+Basic <code>GET</code> request to Google. We're going to do a little bit of
+command line magic to get <b>just</b> the request and response headers for
+the <code>GET</code> request.
+</p>
+
+<div class="org-src-container">
+
+<pre  class="src src-shell">curl -vs -D - http://google.com -o /dev/null 2&gt;&amp;1 | grep -v <span style="color: #8AE234;">'^\w'</span>
+</pre>
+</div>
+
+<pre class="example">
+* Rebuilt URL to: http://google.com/
+*   Trying 74.125.228.224...
+* Connected to google.com (74.125.228.224) port 80 (#0)
+&gt; GET / HTTP/1.1
+&gt; Host: google.com
+&gt; User-Agent: curl/7.43.0
+&gt; Accept: */*
+&gt; 
+&lt; HTTP/1.1 301 Moved Permanently
+&lt; Location: http://www.google.com/
+&lt; Content-Type: text/html; charset=UTF-8
+&lt; Date: Tue, 08 Sep 2015 02:08:07 GMT
+&lt; Expires: Thu, 08 Oct 2015 02:08:07 GMT
+&lt; Cache-Control: public, max-age=2592000
+&lt; Server: gws
+&lt; Content-Length: 219
+&lt; X-XSS-Protection: 1; mode=block
+&lt; X-Frame-Options: SAMEORIGIN
+&lt; 
+{ [219 bytes data]
+* Connection #0 to host google.com left intact
+
+</pre>
+
+<ul>
+<li>Questions
+<ul>
+<li>What is the client sending?</li>
+<li>What response does the server send back?</li>
+
+</ul></li>
+
+</ul>
+
+</section>
+<section id="slide-orgheadline3">
+<h3 id="orgheadline3"><span class="section-number-3">2.2</span> <code>GET</code> <code>http://www.google.com</code></h3>
+<p>
+And to the main page.
+</p>
+
+<div class="org-src-container">
+
+<pre  class="src src-shell">curl -vs -D - http://www.google.com -o /dev/null 2&gt;&amp;1 | grep -v <span style="color: #8AE234;">'^\w'</span>
+</pre>
+</div>
+
+<pre class="example">
+* Rebuilt URL to: http://www.google.com/
+*   Trying 74.125.228.242...
+* Connected to www.google.com (74.125.228.242) port 80 (#0)
+&gt; GET / HTTP/1.1
+&gt; Host: www.google.com
+&gt; User-Agent: curl/7.43.0
+&gt; Accept: */*
+&gt; 
+&lt; HTTP/1.1 200 OK
+&lt; Date: Tue, 08 Sep 2015 02:12:17 GMT
+&lt; Expires: -1
+&lt; Cache-Control: private, max-age=0
+&lt; Content-Type: text/html; charset=ISO-8859-1
+&lt; P3P: CP="This is not a P3P policy! See http://www.google.com/support/accounts/bin/answer.py?hl=en&amp;answer=151657 for more info."
+&lt; Server: gws
+&lt; X-XSS-Protection: 1; mode=block
+&lt; X-Frame-Options: SAMEORIGIN
+&lt; Set-Cookie: PREF=ID=1111111111111111:FF=0:TM=1441678337:LM=1441678337:V=1:S=u7x0joevRJhMMnr0; expires=Thu, 31-Dec-2015 16:02:17 GMT; path=/; domain=.google.com
+&lt; Set-Cookie: NID=71=XwUH5izldZ7xPjrC0sQsX3x4lgOmof1jIRcMoO16P3ohojdb2khtOvSNMYqjcf-hb9cmOoPWr7uAO497HuJ0mYjl5CCYcid9Jv6bqeMsN6cQeO-60DC7fSeOp672m8lF; expires=Wed, 09-Mar-2016 02:12:17 GMT; path=/; domain=.google.com; HttpOnly
+&lt; Accept-Ranges: none
+&lt; Vary: Accept-Encoding
+&lt; Transfer-Encoding: chunked
+&lt; 
+{ [536 bytes data]
+* Connection #0 to host www.google.com left intact
+
+</pre>
+
+<ul>
+<li>Questions
+<ul>
+<li>What is the client sending?</li>
+<li>What response does the server send back?</li>
+<li>What is different from the request to <code>http://google.com</code></li>
+
+</ul></li>
+
+</ul>
+
+</section>
+<section id="slide-orgheadline4">
+<h3 id="orgheadline4"><span class="section-number-3">2.3</span> <code>GET</code> <code>https://www.google.com</code></h3>
+<div class="org-src-container">
+
+<pre  class="src src-shell">curl -vs -D - https://www.google.com -o /dev/null 2&gt;&amp;1 | grep -v <span style="color: #8AE234;">'^\w'</span>
+</pre>
+</div>
+
+<pre class="example">
+* Rebuilt URL to: https://www.google.com/
+*   Trying 74.125.228.242...
+*   Trying 2607:f8b0:4004:807::1014...
+* Connected to www.google.com (74.125.228.242) port 443 (#0)
+* TLS 1.2 connection using TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA
+* Server certificate: www.google.com
+* Server certificate: Google Internet Authority G2
+* Server certificate: GeoTrust Global CA
+&gt; GET / HTTP/1.1
+&gt; Host: www.google.com
+&gt; User-Agent: curl/7.43.0
+&gt; Accept: */*
+&gt; 
+&lt; HTTP/1.1 200 OK
+&lt; Date: Tue, 08 Sep 2015 02:12:43 GMT
+&lt; Expires: -1
+&lt; Cache-Control: private, max-age=0
+&lt; Content-Type: text/html; charset=ISO-8859-1
+&lt; P3P: CP="This is not a P3P policy! See http://www.google.com/support/accounts/bin/answer.py?hl=en&amp;answer=151657 for more info."
+&lt; Server: gws
+&lt; X-XSS-Protection: 1; mode=block
+&lt; X-Frame-Options: SAMEORIGIN
+&lt; Set-Cookie: PREF=ID=1111111111111111:FF=0:TM=1441678363:LM=1441678363:V=1:S=IbgPIvy5s_EnrMm8; expires=Thu, 31-Dec-2015 16:02:17 GMT; path=/; domain=.google.com
+&lt; Set-Cookie: NID=71=pfrsZssRcgselbtswC7gXKwLUilVVd9rD5nU8yHrXtTY0F28tb-MPGa3Fq30h0q6RFJvz-w7CjgbNo_u-rAmds-6XYJatRSD502u0vZTzgAOiickBBgP08QuyiS6ng4h; expires=Wed, 09-Mar-2016 02:12:43 GMT; path=/; domain=.google.com; HttpOnly
+&lt; Alternate-Protocol: 443:quic,p=1
+&lt; Alt-Svc: quic=":443"; p="1"; ma=604800
+&lt; Accept-Ranges: none
+&lt; Vary: Accept-Encoding
+&lt; Transfer-Encoding: chunked
+&lt; 
+{ [405 bytes data]
+* Connection #0 to host www.google.com left intact
+
+</pre>
+</section>
+</section>
+</div>
+</div>
+<script src="./reveal.js/lib/js/head.min.js"></script>
+<script src="./reveal.js/js/reveal.js"></script>
+
+<script>
+// Full list of configuration options available here:
+// https://github.com/hakimel/reveal.js#configuration
+// RAYNERS WAS HERE
+Reveal.initialize({
+
+controls: true,
+progress: true,
+history: false,
+center: true,
+slideNumber: true,
+rollingLinks: false,
+keyboard: true,
+overview: true,
+
+theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
+transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/fade/none
+transitionSpeed: 'default',
+multiplex: {
+    secret: '', // null if client
+    id: '', // id, obtained from socket.io server
+    url: '' // Location of socket.io server
+},
+// BEFORE THE IF// ABC// NOT SINGLE FILE?
+// Optional libraries used to extend on reveal.js
+dependencies: [
+ { src: './reveal.js/lib/js/classList.js', condition: function() { return !document.body.classList; } },
+ { src: './reveal.js/plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+ { src: './reveal.js/plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+ { src: './reveal.js/plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+ { src: './reveal.js/plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }]
+});// END REALLY
+</script>
+</body>
+</html>

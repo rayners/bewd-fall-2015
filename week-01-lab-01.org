@@ -1,0 +1,141 @@
+#+OPTIONS: toc:nil num:nil
+#+REVEAL_EXTRA_CSS: ./reveal.js/lib/css/zenburn.css
+#+REVEAL_THEME: white
+#+REVEAL_PLUGINS: (highlight)
+
+#+TITLE: Node setup and JavaScript Lab
+
+* Let's setup your Javascript environment and run some stuff.
+
+* Install homebrew
+
+  Hop on over to http://brew.sh
+  
+  Short version: Run this in your terminal
+
+  #+BEGIN_SRC shell :exports code
+    ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+  #+END_SRC
+
+* Install node
+
+#+BEGIN_SRC shell
+$ brew install node
+#+END_SRC
+
+* Let's write some code!
+
+** Running the interactive node shell
+
+   Also referred to as a ~REPL~ (Read-Evaluate-Print Loop)
+
+   #+BEGIN_SRC shell
+   $ node
+   > 
+   #+END_SRC
+
+** 
+ #+BEGIN_SRC js
+   > var a = 15;
+   > console.log(a);
+ #+END_SRC
+
+ #+ATTR_REVEAL: :frag t
+ #+BEGIN_SRC js
+ 15
+ #+END_SRC
+
+ #+ATTR_REVEAL: :frag t
+ The value of ~a~ is assigned when it is created and initialized.
+
+** 
+  #+BEGIN_SRC js
+    > var a = 15;
+    > var b = a;
+    > console.log(b);
+  #+END_SRC
+
+  #+ATTR_REVEAL: :frag t
+  #+BEGIN_SRC js
+  15
+  #+END_SRC
+
+  #+ATTR_REVEAL: :frag t
+  The value is copied from ~a~ to ~b~ when ~b~ is created and initialized.
+
+** 
+  #+BEGIN_SRC js
+    > var a = 15;
+    > var b = a;
+    > a = 12;
+    > console.log(b);
+  #+END_SRC
+
+  #+ATTR_REVEAL: :frag t
+  #+BEGIN_SRC js
+  15
+  #+END_SRC
+  
+  #+ATTR_REVEAL: :frag t
+  ~b~ has been set, ~a~ was updated.
+
+** 
+  #+BEGIN_SRC js
+    > var a = { foo: 15 };
+    > var b = a;
+    > console.log(b);
+  #+END_SRC
+
+  #+ATTR_REVEAL: :frag t
+  #+BEGIN_SRC js
+  { foo: 15 }
+  #+END_SRC
+
+  #+ATTR_REVEAL: :frag t
+  As before, the value of ~a~ was copied to ~b~ when it is created and initialized.
+
+** 
+  #+BEGIN_SRC js
+    > var a = { foo: 15 };
+    > var b = a;
+    > a.bar = 12;
+    > console.log(b);
+  #+END_SRC
+
+  #+ATTR_REVEAL: :frag t
+  #+BEGIN_SRC js
+    { foo: 15, bar: 12 }
+  #+END_SRC
+
+  #+ATTR_REVEAL: :frag t
+  HUH?!
+
+** 
+   So the value of ~a~ wasn't exactly /copied/ in this case.
+
+   What was copied was the reference to the value of ~a~ (think pointers for those familiar with C/C++).
+
+   #+ATTR_REVEAL: :frag t
+   Sometimes that is a useful feature.
+
+   #+ATTR_REVEAL: :frag t
+   Often it isn't.
+
+** 
+
+   So how can we get around that? There are a number of ways, in fact,
+   but this is a way to do it using only what comes with node.
+
+   #+BEGIN_SRC js
+     > var a = { foo: 15 };
+     > var b = require('util')._extend({}, a);
+     > a.bar = 12;
+     > console.log(b);
+   #+END_SRC
+
+   #+BEGIN_SRC js
+   { foo: 15 }
+   #+END_SRC
+
+** 
+   Sure, it works. 

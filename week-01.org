@@ -1,0 +1,128 @@
+#+TITLE: Programming Refresher
+
+#+OPTIONS: num:nil toc:nil
+#+REVEAL_SLIDE_NUMBER: nil
+
+
+* Welcome to BEWD, Fall '15!
+
+* GO INSTALL XCODE
+
+* Class Goals
+
+  I want you to walk out of here at the end of the class being able to
+  do the job that the people that work for me do.
+
+  What does that mean?
+
+  That means that I will be able to hand you the description of a
+  change that needs to happen in the application that we work on, and
+  you would be able to implement that change.
+
+** What are your goals for the class?
+
+* Tools
+
+  Like any other craft, programmers use a variety of tools. Every
+  tool has a purpose, specialties, and drawbacks. Trade offs.
+
+** Javascript
+
+   Javascript is unique among programming languages in that it is
+   *the* primary language of browser interactivity. You could write
+   web interfaces in other languages (ClojureScript, CoffeeScript,
+   ...), but they still have to be translated into JavaScript to work
+   in a browser.
+
+** Node
+
+   JavaScript is *not* a compiled language. That means that it needs
+   another program in which to execute. Node (and a web browser) will
+   be that environment for us.
+
+** Atom
+
+   You have to edit your code somehow. Otherwise you'll be writing
+   the same thing over and over again.
+
+** Git
+
+   You need to save and share your code somehow. Git is how many
+   teams (including mine!) collaborate while building their software.
+
+   Specifically we will be using [[http://www.github.com][GitHub]].
+
+** Others...
+*** curl
+
+    Good for debugging
+
+    Also check out:
+
+    - httpie
+*** ???
+
+* Fundamentals
+** Javascript refresher
+
+*** Variables
+
+    Variables are buckets for storing information.
+
+    - Pointers/references and the potential for bugs
+
+*** Functions
+
+    Functions are pipes that process information. They have input,
+    output, and sometimes things leak out the side.
+
+    - Return value
+    - Arguments
+
+*** Objects
+
+    Structures.
+
+    - Properties
+    - Functions
+    - Constructors
+
+- Prototypes
+- Inheritance? Probably too much
+- Any bits of ES6?
+
+** Lab: Install node
+
+1. Homebrew!
+2. Install node
+
+** Anatomy of a web request
+
+*** What happens when you click
+
+- DNS request for hostname
+- TCP connection to host
+- HTTP Request
+  - Host
+  - Headers
+  - Verbs
+  - URL/Path
+  - Body/parameters
+- HTTP Response
+
+** Lab: curl
+
+
+
+1. Install it
+2. Do some requests
+
+** Writing tests and testable code
+*** Unit test concepts
+    - Focused
+    - Small
+    - Extensive
+    - Coverage
+*** Jasmine tests
+*** Mocha tests
+**** Chai

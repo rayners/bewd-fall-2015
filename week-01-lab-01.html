@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<title>Node setup and JavaScript Lab</title>
+<meta name="author" content="(David Raynes)"/>
+<link rel="stylesheet" href="./reveal.js/css/reveal.css"/>
+<link rel="stylesheet" href="./reveal.js/css/theme/white.css" id="theme"/>
+<link rel="stylesheet" href="./reveal.js/lib/css/zenburn.css"/>
+<!-- If the query includes 'print-pdf', include the PDF print sheet -->
+<script>
+    if( window.location.search.match( /print-pdf/gi ) ) {
+        var link = document.createElement( 'link' );
+        link.rel = 'stylesheet';
+        link.type = 'text/css';
+        link.href = './reveal.js/css/print/pdf.css';
+        document.getElementsByTagName( 'head' )[0].appendChild( link );
+    }
+</script>
+</head>
+<body>
+<div class="reveal">
+<div class="slides">
+<section id="sec-title-slide">
+<h1>Node setup and JavaScript Lab</h1>
+<h2>David Raynes</h2>
+<h2><a href="mailto:rayners@gmail.com">rayners@gmail.com</a></h2>
+<h2></h2>
+</section>
+
+<section>
+<section id="slide-orgheadline1">
+<h2 id="orgheadline1">Let's setup your Javascript environment and run some stuff.</h2>
+
+</section>
+</section>
+<section>
+<section id="slide-orgheadline2">
+<h2 id="orgheadline2">Install homebrew</h2>
+<p>
+Hop on over to <a href="http://brew.sh/">http://brew.sh/</a>
+</p>
+
+<p>
+Short version: Run this in your terminal
+</p>
+
+<div class="org-src-container">
+
+<pre><code class="shell">ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+</code></pre>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-orgheadline3">
+<h2 id="orgheadline3">Install node</h2>
+<div class="org-src-container">
+
+<pre><code class="shell">$ brew install node
+</code></pre>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-orgheadline13">
+<h2 id="orgheadline13">Let's write some code!</h2>
+<div class="outline-text-2" id="text-orgheadline13">
+</div></section>
+<section id="slide-orgheadline4">
+<h3 id="orgheadline4">Running the interactive node shell</h3>
+<p>
+Also referred to as a <code>REPL</code> (Read-Evaluate-Print Loop)
+</p>
+
+<div class="org-src-container">
+
+<pre><code class="shell">$ node
+>
+</code></pre>
+</div>
+
+</section>
+<section id="slide-orgheadline5">
+<h3 id="orgheadline5"></h3>
+<div class="org-src-container">
+
+<pre><code class="js">> var a = 15;
+> console.log(a);
+</code></pre>
+</div>
+
+<div class="org-src-container">
+
+<pre class="fragment"><code class="js">15
+</code></pre>
+</div>
+
+<p class="fragment">
+The value of <code>a</code> is assigned when it is created and initialized.
+</p>
+
+</section>
+<section id="slide-orgheadline6">
+<h3 id="orgheadline6"></h3>
+<div class="org-src-container">
+
+<pre><code class="js">> var a = 15;
+> var b = a;
+> console.log(b);
+</code></pre>
+</div>
+
+<div class="org-src-container">
+
+<pre class="fragment"><code class="js">15
+</code></pre>
+</div>
+
+<p class="fragment">
+The value is copied from <code>a</code> to <code>b</code> when <code>b</code> is created and initialized.
+</p>
+
+</section>
+<section id="slide-orgheadline7">
+<h3 id="orgheadline7"></h3>
+<div class="org-src-container">
+
+<pre><code class="js">> var a = 15;
+> var b = a;
+> a = 12;
+> console.log(b);
+</code></pre>
+</div>
+
+<div class="org-src-container">
+
+<pre class="fragment"><code class="js">15
+</code></pre>
+</div>
+
+<p class="fragment">
+<code>b</code> has been set, <code>a</code> was updated.
+</p>
+
+</section>
+<section id="slide-orgheadline8">
+<h3 id="orgheadline8"></h3>
+<div class="org-src-container">
+
+<pre><code class="js">> var a = { foo: 15 };
+> var b = a;
+> console.log(b);
+</code></pre>
+</div>
+
+<div class="org-src-container">
+
+<pre class="fragment"><code class="js">{ foo: 15 }
+</code></pre>
+</div>
+
+<p class="fragment">
+As before, the value of <code>a</code> was copied to <code>b</code> when it is created and initialized.
+</p>
+
+</section>
+<section id="slide-orgheadline9">
+<h3 id="orgheadline9"></h3>
+<div class="org-src-container">
+
+<pre><code class="js">> var a = { foo: 15 };
+> var b = a;
+> a.bar = 12;
+> console.log(b);
+</code></pre>
+</div>
+
+<div class="org-src-container">
+
+<pre class="fragment"><code class="js">{ foo: 15, bar: 12 }
+</code></pre>
+</div>
+
+<p class="fragment">
+HUH?!
+</p>
+
+</section>
+<section id="slide-orgheadline10">
+<h3 id="orgheadline10"></h3>
+<p>
+So the value of <code>a</code> wasn't exactly <i>copied</i> in this case.
+</p>
+
+<p>
+What was copied was the reference to the value of <code>a</code> (think pointers for those familiar with C/C++).
+</p>
+
+<p class="fragment">
+Sometimes that is a useful feature.
+</p>
+
+<p class="fragment">
+Often it isn't.
+</p>
+
+</section>
+<section id="slide-orgheadline11">
+<h3 id="orgheadline11"></h3>
+<p>
+So how can we get around that? There are a number of ways, in fact,
+but this is a way to do it using only what comes with node.
+</p>
+
+<div class="org-src-container">
+
+<pre><code class="js">> var a = { foo: 15 };
+> var b = require('util')._extend({}, a);
+> a.bar = 12;
+> console.log(b);
+</code></pre>
+</div>
+
+<div class="org-src-container">
+
+<pre><code class="js">{ foo: 15 }
+</code></pre>
+</div>
+
+</section>
+<section id="slide-orgheadline12">
+<h3 id="orgheadline12"></h3>
+<p>
+Sure, it works. 
+</p>
+</section>
+</section>
+</div>
+</div>
+<script src="./reveal.js/lib/js/head.min.js"></script>
+<script src="./reveal.js/js/reveal.js"></script>
+
+<script>
+// Full list of configuration options available here:
+// https://github.com/hakimel/reveal.js#configuration
+// RAYNERS WAS HERE
+Reveal.initialize({
+
+controls: true,
+progress: true,
+history: false,
+center: true,
+slideNumber: true,
+rollingLinks: false,
+keyboard: true,
+overview: true,
+
+theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
+transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/fade/none
+transitionSpeed: 'default',
+multiplex: {
+    secret: '', // null if client
+    id: '', // id, obtained from socket.io server
+    url: '' // Location of socket.io server
+},
+// BEFORE THE IF// ABC// NOT SINGLE FILE?
+// Optional libraries used to extend on reveal.js
+dependencies: [
+ { src: './reveal.js/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } }]
+});// END REALLY
+</script>
+</body>
+</html>

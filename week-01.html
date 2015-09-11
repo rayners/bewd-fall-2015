@@ -1,0 +1,300 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<title>Programming Refresher</title>
+<meta name="author" content="(David Raynes)"/>
+<link rel="stylesheet" href="./reveal.js/css/reveal.css"/>
+<link rel="stylesheet" href="./reveal.js/css/theme/moon.css" id="theme"/>
+<link rel="stylesheet" href=""/>
+<!-- If the query includes 'print-pdf', include the PDF print sheet -->
+<script>
+    if( window.location.search.match( /print-pdf/gi ) ) {
+        var link = document.createElement( 'link' );
+        link.rel = 'stylesheet';
+        link.type = 'text/css';
+        link.href = './reveal.js/css/print/pdf.css';
+        document.getElementsByTagName( 'head' )[0].appendChild( link );
+    }
+</script>
+</head>
+<body>
+<div class="reveal">
+<div class="slides">
+<section id="sec-title-slide">
+<h1>Programming Refresher</h1>
+<h2>David Raynes</h2>
+<h2><a href="mailto:rayners@gmail.com">rayners@gmail.com</a></h2>
+<h2></h2>
+</section>
+
+
+<section>
+<section id="slide-orgheadline1">
+<h2 id="orgheadline1">Welcome to BEWD, Fall '15!</h2>
+
+</section>
+</section>
+<section>
+<section id="slide-orgheadline2">
+<h2 id="orgheadline2">GO INSTALL XCODE</h2>
+
+</section>
+</section>
+<section>
+<section id="slide-orgheadline4">
+<h2 id="orgheadline4">Class Goals</h2>
+<p>
+I want you to walk out of here at the end of the class being able to
+do the job that the people that work for me do.
+</p>
+
+<p>
+What does that mean?
+</p>
+
+<p>
+That means that I will be able to hand you the description of a
+change that needs to happen in the application that we work on, and
+you would be able to implement that change.
+</p>
+
+</section>
+<section id="slide-orgheadline3">
+<h3 id="orgheadline3">What are your goals for the class?</h3>
+
+</section>
+</section>
+<section>
+<section id="slide-orgheadline12">
+<h2 id="orgheadline12">Tools</h2>
+<p>
+Like any other craft, programmers use a variety of tools. Every
+tool has a purpose, specialties, and drawbacks. Trade offs.
+</p>
+
+</section>
+<section id="slide-orgheadline5">
+<h3 id="orgheadline5">Javascript</h3>
+<p>
+Javascript is unique among programming languages in that it is
+<b>the</b> primary language of browser interactivity. You could write
+web interfaces in other languages (ClojureScript, CoffeeScript,
+&#x2026;), but they still have to be translated into JavaScript to work
+in a browser.
+</p>
+
+</section>
+<section id="slide-orgheadline6">
+<h3 id="orgheadline6">Node</h3>
+<p>
+JavaScript is <b>not</b> a compiled language. That means that it needs
+another program in which to execute. Node (and a web browser) will
+be that environment for us.
+</p>
+
+</section>
+<section id="slide-orgheadline7">
+<h3 id="orgheadline7">Atom</h3>
+<p>
+You have to edit your code somehow. Otherwise you'll be writing
+the same thing over and over again.
+</p>
+
+</section>
+<section id="slide-orgheadline8">
+<h3 id="orgheadline8">Git</h3>
+<p>
+You need to save and share your code somehow. Git is how many
+teams (including mine!) collaborate while building their software.
+</p>
+
+<p>
+Specifically we will be using <a href="http://www.github.com/">GitHub</a>.
+</p>
+
+</section>
+<section id="slide-orgheadline11">
+<h3 id="orgheadline11">Others&#x2026;</h3>
+<div class="outline-text-3" id="text-orgheadline11">
+</div></section>
+<section id="slide-orgheadline9">
+<h4 id="orgheadline9">curl</h4>
+<p>
+Good for debugging
+</p>
+
+<p>
+Also check out:
+</p>
+
+<ul>
+<li>httpie</li>
+
+</ul>
+</section>
+<section id="slide-orgheadline10">
+<h4 id="orgheadline10">???</h4>
+
+</section>
+</section>
+<section>
+<section id="slide-orgheadline26">
+<h2 id="orgheadline26">Fundamentals</h2>
+<div class="outline-text-2" id="text-orgheadline26">
+</div></section>
+<section id="slide-orgheadline16">
+<h3 id="orgheadline16">Javascript refresher</h3>
+<div class="outline-text-3" id="text-orgheadline16">
+</div></section>
+<section id="slide-orgheadline13">
+<h4 id="orgheadline13">Variables</h4>
+<p>
+Variables are buckets for storing information.
+</p>
+
+<ul>
+<li>Pointers/references and the potential for bugs</li>
+
+</ul>
+
+</section>
+<section id="slide-orgheadline14">
+<h4 id="orgheadline14">Functions</h4>
+<p>
+Functions are pipes that process information. They have input,
+output, and sometimes things leak out the side.
+</p>
+
+<ul>
+<li>Return value</li>
+<li>Arguments</li>
+
+</ul>
+
+</section>
+<section id="slide-orgheadline15">
+<h4 id="orgheadline15">Objects</h4>
+<p>
+Structures.
+</p>
+
+<ul>
+<li>Properties</li>
+<li>Functions</li>
+<li>Constructors</li>
+
+</ul>
+<ul>
+<li>Prototypes</li>
+<li>Inheritance? Probably too much</li>
+<li>Any bits of ES6?</li>
+
+</ul>
+
+</section>
+<section id="slide-orgheadline17">
+<h3 id="orgheadline17">Lab: Install node</h3>
+<ol>
+<li>Homebrew!</li>
+<li>Install node</li>
+
+</ol>
+
+</section>
+<section id="slide-orgheadline19">
+<h3 id="orgheadline19">Anatomy of a web request</h3>
+<div class="outline-text-3" id="text-orgheadline19">
+</div></section>
+<section id="slide-orgheadline18">
+<h4 id="orgheadline18">What happens when you click</h4>
+<ul>
+<li>DNS request for hostname</li>
+<li>TCP connection to host</li>
+<li>HTTP Request
+<ul>
+<li>Host</li>
+<li>Headers</li>
+<li>Verbs</li>
+<li>URL/Path</li>
+<li>Body/parameters</li>
+
+</ul></li>
+<li>HTTP Response</li>
+
+</ul>
+
+</section>
+<section id="slide-orgheadline20">
+<h3 id="orgheadline20">Lab: curl</h3>
+<ol>
+<li>Install it</li>
+<li>Do some requests</li>
+
+</ol>
+
+</section>
+<section id="slide-orgheadline25">
+<h3 id="orgheadline25">Writing tests and testable code</h3>
+<div class="outline-text-3" id="text-orgheadline25">
+</div></section>
+<section id="slide-orgheadline21">
+<h4 id="orgheadline21">Unit test concepts</h4>
+<ul>
+<li>Focused</li>
+<li>Small</li>
+<li>Extensive</li>
+<li>Coverage</li>
+
+</ul>
+</section>
+<section id="slide-orgheadline22">
+<h4 id="orgheadline22">Jasmine tests</h4>
+</section>
+<section id="slide-orgheadline24">
+<h4 id="orgheadline24">Mocha tests</h4>
+<div class="outline-text-4" id="text-orgheadline24">
+</div><ul class="org-ul"><li><a id="orgheadline23"></a>Chai<br  /></li></ul>
+</section>
+</section>
+</div>
+</div>
+<script src="./reveal.js/lib/js/head.min.js"></script>
+<script src="./reveal.js/js/reveal.js"></script>
+
+<script>
+// Full list of configuration options available here:
+// https://github.com/hakimel/reveal.js#configuration
+// RAYNERS WAS HERE
+Reveal.initialize({
+
+controls: true,
+progress: true,
+history: false,
+center: true,
+slideNumber: true,
+rollingLinks: false,
+keyboard: true,
+overview: true,
+
+theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
+transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/fade/none
+transitionSpeed: 'default',
+multiplex: {
+    secret: '', // null if client
+    id: '', // id, obtained from socket.io server
+    url: '' // Location of socket.io server
+},
+// BEFORE THE IF// ABC// NOT SINGLE FILE?
+// Optional libraries used to extend on reveal.js
+dependencies: [
+ { src: './reveal.js/lib/js/classList.js', condition: function() { return !document.body.classList; } },
+ { src: './reveal.js/plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+ { src: './reveal.js/plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+ { src: './reveal.js/plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+ { src: './reveal.js/plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }]
+});// END REALLY
+</script>
+</body>
+</html>
