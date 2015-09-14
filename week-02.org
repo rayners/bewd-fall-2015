@@ -1,0 +1,233 @@
+* Testing follow up
+** Why do we test
+   - Safety net
+   - Refactoring
+   - Deployment
+   - Catch bugs, and prove fixes
+
+** Kinds of testing
+   - Boundary
+   - Corner/edge case
+   - Code coverage tools
+
+** JSVerify followup
+
+   #+BEGIN_SRC js
+     var assert = require('assert'),
+       jsc = require('jsverify');
+
+     describe('fibNumber', function() {
+       jsc.property('should obay the fibonacci rules', 'nat 35', { quiet: false }, function(n) {
+         if (n < 2) {
+           return fibNumber(n) == 1;
+         } else {
+           return fibNumber(n) == (fibNumber(n - 1) + fibNumber(n - 2));
+         }
+       });
+     });
+   #+END_SRC
+
+* Modules
+  - Fibonacci and fizzbuzz in modules
+
+    #+BEGIN_SRC js
+      module.exports = function fibNumber(index) {
+          // ...
+      }
+    #+END_SRC
+
+    #+BEGIN_SRC js
+      var fibNumber = require('fibNumber');
+
+      console.log(fibNumber(10));
+    #+END_SRC
+
+  - So we can test them in other files with benchmark and mocha
+
+* Packages
+  - Package.json (=npm init=)
+  - npm, =npm install=, and =node_modules/=
+
+* ESLint setup for atom
+
+  - =npm install --save eslint=
+  - linter and linter-eslint packages for Atom
+  - =.eslintrc=
+    #+BEGIN_SRC json
+      {
+        "extends": ["eslint:recommended"],
+        "env": {
+          "node": true,
+          "mocha": true
+        },
+        "rules": {
+          "no-console": 0
+        }
+      }
+    #+END_SRC
+
+* Map and parallel processing
+  - Also the benchmark results!!
+
+* Angular and Express intro
+
+** Start an express application  
+
+   - new directory
+   - =npm init=
+   - =npm install --save express=
+
+*** Express application, first round
+
+   - =index.js=:
+
+     #+BEGIN_SRC js
+       var express = require('express');
+       var app = express();
+
+       app.get('/', function(req, res) {
+         res.send('Hello world!');
+       });
+
+       var server = app.listen(3000, function() {
+         var host = server.address().address;
+         var port = server.address().port;
+
+         console.log('Example app listening at http://%s:%s', host, port);
+       });
+
+     #+END_SRC
+
+*** Express application, second round
+
+    - =npm install --save jade=
+
+    - =index.js=:
+
+      #+BEGIN_SRC js
+        var express = require('express');
+        var app = express();
+
+        app.set('view engine', 'jade');
+
+        app.get('/', function(req, res) {
+          //res.send('Hello world!');
+          res.render('index');
+        });
+
+        var server = app.listen(3000, function() {
+          var host = server.address().address;
+          var port = server.address().port;
+
+          console.log('Example app listening at http://%s:%s', host, port);
+        });
+      #+END_SRC
+
+    - =views/index.jade=:
+
+      #+BEGIN_SRC jade
+        doctype html
+        html
+          head
+            title Hello world!
+          body
+            h1 Hello citizens!
+      #+END_SRC
+
+*** Third time around
+
+    - =index.js=:
+
+      #+BEGIN_SRC js
+        var express = require('express');
+        var app = express();
+
+        app.set('view engine', 'jade');
+
+        app.get('/', function(req, res) {
+          //res.send('Hello world!');
+          res.render('index');
+        });
+
+        app.get('/game', function(req, res) {
+          res.render('game', req.query);
+        });
+
+        var server = app.listen(3000, function() {
+          var host = server.address().address;
+          var port = server.address().port;
+
+          console.log(server.address());
+          console.log('Example app listening at http://%s:%s', host, port);
+        });
+     #+END_SRC
+
+    - =views/index.jade=:
+
+      #+BEGIN_SRC jade
+        doctype html
+        html
+          head
+            title Hello world!
+          body
+            h1 Hello citizens!
+    
+            form(name="game", action="/game")
+              input(type="text", name="username")
+              input(type="submit")
+     #+END_SRC
+
+    - =views/game.jade=:
+
+      #+BEGIN_SRC jade
+        doctype html
+        html
+          head
+            title Welcome #{username}
+          body
+            h1 Hi #{username}
+            h2 Want to play a game?
+     #+END_SRC
+
+*** Let's give it some style
+
+    - [[http://getbootstrap.com][Bootstrap]]
+
+**** bower
+
+     - =npm install -g bower=
+     - =npm install --save bower=
+     - =bower init=
+     - =bower install bootstrap=
+
+**** Static assets
+
+     - That's a fancy way of saying "just send these files out"
+     
+       #+BEGIN_SRC js
+         app.use('/bower_components', express.static(__dirname + '/bower_components'));
+       #+END_SRC
+
+     - Add to =head= block in =index.jade=
+
+       #+BEGIN_SRC jade
+         link(href='/bower_components/bootstrap/dist/css/bootstrap.css', rel='stylesheet')
+         script(href='/bower_components/bootstrap/dist/js/bootstrap.js')
+       #+END_SRC
+
+     - Create =views/includes= and =views/includes/bower_header.jade=
+
+       #+BEGIN_SRC jade
+         include ./includes/bower_header.jade
+       #+END_SRC
+
+** Angular time!
+
+   - add the script tag
+   - =ng-app=
+   - ={{ ... }}=
+   - =ng-init= and =ng-click=
+
+   - Basic angular controllers
+   - Bootstrap/CSS
+
