@@ -32,9 +32,18 @@ function fibNumber(index) {
   }
 }
 
-console.log(fibNumber(15));
+var assert = require('assert'),
+  jsc = require('jsverify');
 
-var assert = require('assert');
+describe('fibNumber', function() {
+  jsc.property('should obay the fibonacci rules', 'nat 35', { quiet: false }, function(n) {
+    if (n < 2) {
+      return fibNumber(n) == 1;
+    } else {
+      return fibNumber(n) == (fibNumber(n - 1) + fibNumber(n - 2));
+    }
+  });
+});
 
 describe('fizzBuzz', function() {
   it('should return ["FizzBuzz"] when called with 0', function() {
