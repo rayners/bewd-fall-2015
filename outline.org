@@ -9,5 +9,5 @@
 
 * Weeks
 
-#+INCLUDE: "./week-01.org"
-#+INCLUDE: "./week-02.org"
+  - [[./week-01.org][Week 1]]
+  - [[./week-02.org][Week 2]]
