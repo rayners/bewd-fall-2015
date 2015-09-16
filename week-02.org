@@ -212,7 +212,7 @@
 
        #+BEGIN_SRC jade
          link(href='/bower_components/bootstrap/dist/css/bootstrap.css', rel='stylesheet')
-         script(href='/bower_components/bootstrap/dist/js/bootstrap.js')
+         script(src='/bower_components/bootstrap/dist/js/bootstrap.js')
        #+END_SRC
 
      - Create =views/includes= and =views/includes/bower_header.jade=
