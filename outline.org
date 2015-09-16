@@ -1,5 +1,12 @@
 #+TITLE: Back End Web Development, Fall '15
 
+* Resources
+** Podcasts
+
+   - [[https://devchat.tv/js-jabber][Javascript Jabber]]
+   - [[https://devchat.tv/adventures-in-angular][Adventures in Angular]]
+   - [[http://angular-air.com][Angular Air]]
+
 * Weeks
 
 #+INCLUDE: "./week-01.org"
