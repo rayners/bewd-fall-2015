@@ -1,106 +1,84 @@
-* Testing follow up
-** Why do we test
-   - Safety net
-   - Refactoring
-   - Deployment
-   - Catch bugs, and prove fixes
+* Monday
+** Testing follow up
+*** Why do we test
+    - Safety net
+    - Refactoring
+    - Deployment
+    - Catch bugs, and prove fixes
 
-** Kinds of testing
-   - Boundary
-   - Corner/edge case
-   - Code coverage tools
+*** Kinds of testing
+    - Boundary
+    - Corner/edge case
+    - Code coverage tools
 
-** JSVerify followup
-
-   #+BEGIN_SRC js
-     var assert = require('assert'),
-       jsc = require('jsverify');
-
-     describe('fibNumber', function() {
-       jsc.property('should obay the fibonacci rules', 'nat 35', { quiet: false }, function(n) {
-         if (n < 2) {
-           return fibNumber(n) == 1;
-         } else {
-           return fibNumber(n) == (fibNumber(n - 1) + fibNumber(n - 2));
-         }
-       });
-     });
-   #+END_SRC
-
-* Modules
-  - Fibonacci and fizzbuzz in modules
+*** JSVerify followup
 
     #+BEGIN_SRC js
-      module.exports = function fibNumber(index) {
-          // ...
-      }
+      var assert = require('assert'),
+        jsc = require('jsverify');
+
+      describe('fibNumber', function() {
+        jsc.property('should obay the fibonacci rules', 'nat 35', { quiet: false }, function(n) {
+          if (n < 2) {
+            return fibNumber(n) == 1;
+          } else {
+            return fibNumber(n) == (fibNumber(n - 1) + fibNumber(n - 2));
+          }
+        });
+      });
     #+END_SRC
 
-    #+BEGIN_SRC js
-      var fibNumber = require('fibNumber');
-
-      console.log(fibNumber(10));
-    #+END_SRC
-
-  - So we can test them in other files with benchmark and mocha
-
-* Packages
-  - Package.json (=npm init=)
-  - npm, =npm install=, and =node_modules/=
-
-* ESLint setup for atom
-
-  - =npm install --save eslint=
-  - linter and linter-eslint packages for Atom
-  - =.eslintrc=
-    #+BEGIN_SRC json
-      {
-        "extends": ["eslint:recommended"],
-        "env": {
-          "node": true,
-          "mocha": true
-        },
-        "rules": {
-          "no-console": 0
-        }
-      }
-    #+END_SRC
-
-* Map and parallel processing
-  - Also the benchmark results!!
-
-* Angular and Express intro
-
-** Start an express application  
-
-   - new directory
-   - =npm init=
-   - =npm install --save express=
-
-*** Express application, first round
-
-   - =index.js=:
+** Modules
+   - Fibonacci and fizzbuzz in modules
 
      #+BEGIN_SRC js
-       var express = require('express');
-       var app = express();
-
-       app.get('/', function(req, res) {
-         res.send('Hello world!');
-       });
-
-       var server = app.listen(3000, function() {
-         var host = server.address().address;
-         var port = server.address().port;
-
-         console.log('Example app listening at http://%s:%s', host, port);
-       });
-
+       module.exports = function fibNumber(index) {
+           // ...
+       }
      #+END_SRC
 
-*** Express application, second round
+     #+BEGIN_SRC js
+       var fibNumber = require('fibNumber');
 
-    - =npm install --save jade=
+       console.log(fibNumber(10));
+     #+END_SRC
+
+   - So we can test them in other files with benchmark and mocha
+
+** Packages
+   - Package.json (=npm init=)
+   - npm, =npm install=, and =node_modules/=
+
+** ESLint setup for atom
+
+   - =npm install --save eslint=
+   - linter and linter-eslint packages for Atom
+   - =.eslintrc=
+     #+BEGIN_SRC json
+       {
+         "extends": ["eslint:recommended"],
+         "env": {
+           "node": true,
+           "mocha": true
+         },
+         "rules": {
+           "no-console": 0
+         }
+       }
+     #+END_SRC
+
+** Map and parallel processing
+   - Also the benchmark results!!
+
+** Angular and Express intro
+
+*** Start an express application  
+
+    - new directory
+    - =npm init=
+    - =npm install --save express=
+
+**** Express application, first round
 
     - =index.js=:
 
@@ -108,11 +86,8 @@
         var express = require('express');
         var app = express();
 
-        app.set('view engine', 'jade');
-
         app.get('/', function(req, res) {
-          //res.send('Hello world!');
-          res.render('index');
+          res.send('Hello world!');
         });
 
         var server = app.listen(3000, function() {
@@ -121,232 +96,329 @@
 
           console.log('Example app listening at http://%s:%s', host, port);
         });
+
       #+END_SRC
 
-    - =views/index.jade=:
+**** Express application, second round
 
-      #+BEGIN_SRC jade
-        doctype html
-        html
-          head
-            title Hello world!
-          body
-            h1 Hello citizens!
-      #+END_SRC
+     - =npm install --save jade=
 
-*** Third time around
+     - =index.js=:
 
-    - =index.js=:
-
-      #+BEGIN_SRC js
-        var express = require('express');
-        var app = express();
-
-        app.set('view engine', 'jade');
-
-        app.get('/', function(req, res) {
-          //res.send('Hello world!');
-          res.render('index');
-        });
-
-        app.get('/game', function(req, res) {
-          res.render('game', req.query);
-        });
-
-        var server = app.listen(3000, function() {
-          var host = server.address().address;
-          var port = server.address().port;
-
-          console.log(server.address());
-          console.log('Example app listening at http://%s:%s', host, port);
-        });
-     #+END_SRC
-
-    - =views/index.jade=:
-
-      #+BEGIN_SRC jade
-        doctype html
-        html
-          head
-            title Hello world!
-          body
-            h1 Hello citizens!
-    
-            form(name="game", action="/game")
-              input(type="text", name="username")
-              input(type="submit")
-     #+END_SRC
-
-    - =views/game.jade=:
-
-      #+BEGIN_SRC jade
-        doctype html
-        html
-          head
-            title Welcome #{username}
-          body
-            h1 Hi #{username}
-            h2 Want to play a game?
-     #+END_SRC
-
-*** Let's give it some style
-
-    - [[http://getbootstrap.com][Bootstrap]]
-
-**** bower
-
-     - =npm install -g bower=
-     - =npm install --save bower=
-     - =bower init=
-     - =bower install bootstrap=
-
-**** Static assets
-
-     - That's a fancy way of saying "just send these files out"
-     
        #+BEGIN_SRC js
-         app.use('/bower_components', express.static(__dirname + '/bower_components'));
+         var express = require('express');
+         var app = express();
+
+         app.set('view engine', 'jade');
+
+         app.get('/', function(req, res) {
+           //res.send('Hello world!');
+           res.render('index');
+         });
+
+         var server = app.listen(3000, function() {
+           var host = server.address().address;
+           var port = server.address().port;
+
+           console.log('Example app listening at http://%s:%s', host, port);
+         });
        #+END_SRC
 
-     - Add to =head= block in =index.jade=
+     - =views/index.jade=:
 
        #+BEGIN_SRC jade
-         link(href='/bower_components/bootstrap/dist/css/bootstrap.css', rel='stylesheet')
-         script(src='/bower_components/bootstrap/dist/js/bootstrap.js')
+         doctype html
+         html
+           head
+             title Hello world!
+           body
+             h1 Hello citizens!
        #+END_SRC
 
-     - Create =views/includes= and =views/includes/bower_header.jade=
+**** Third time around
+
+     - =index.js=:
+
+       #+BEGIN_SRC js
+         var express = require('express');
+         var app = express();
+
+         app.set('view engine', 'jade');
+
+         app.get('/', function(req, res) {
+           //res.send('Hello world!');
+           res.render('index');
+         });
+
+         app.get('/game', function(req, res) {
+           res.render('game', req.query);
+         });
+
+         var server = app.listen(3000, function() {
+           var host = server.address().address;
+           var port = server.address().port;
+
+           console.log(server.address());
+           console.log('Example app listening at http://%s:%s', host, port);
+         });
+      #+END_SRC
+
+     - =views/index.jade=:
 
        #+BEGIN_SRC jade
-         include ./includes/bower_header.jade
-       #+END_SRC
+         doctype html
+         html
+           head
+             title Hello world!
+           body
+             h1 Hello citizens!
+    
+             form(name="game", action="/game")
+               input(type="text", name="username")
+               input(type="submit")
+      #+END_SRC
 
-* Angular!
+     - =views/game.jade=:
 
-** Install with bower
+       #+BEGIN_SRC jade
+         doctype html
+         html
+           head
+             title Welcome #{username}
+           body
+             h1 Hi #{username}
+             h2 Want to play a game?
+      #+END_SRC
 
-   - =bower install --save angular=
+**** Let's give it some style
 
-   - update the include header file to load the Angular code
+     - [[http://getbootstrap.com][Bootstrap]]
 
-     #+BEGIN_SRC jade
-       link(href='/bower_components/bootstrap/dist/css/bootstrap.css'
-            rel='stylesheet')
-       script(src='/bower_components/bootstrap/dist/js/bootstrap.js')
-       script(src='/bower_components/angular/angular.js')
-     #+END_SRC
+***** bower
 
-** Bootstrapping Angular
+      - =npm install -g bower=
+      - =npm install --save bower=
+      - =bower init=
+      - =bower install bootstrap=
 
-   We need to get Angular to load, and tell it /where/ to load. All we
-   need to do that is to add the =ng-app= attribute to a HTML
-   element. We'll do it to the =body= tag in =game.jade=
+***** Static assets
+
+      - That's a fancy way of saying "just send these files out"
+     
+        #+BEGIN_SRC js
+          app.use('/bower_components', express.static(__dirname + '/bower_components'));
+        #+END_SRC
+
+      - Add to =head= block in =index.jade=
+
+        #+BEGIN_SRC jade
+          link(href='/bower_components/bootstrap/dist/css/bootstrap.css', rel='stylesheet')
+          script(src='/bower_components/bootstrap/dist/js/bootstrap.js')
+        #+END_SRC
+
+      - Create =views/includes= and =views/includes/bower_header.jade=
+
+        #+BEGIN_SRC jade
+          include ./includes/bower_header.jade
+        #+END_SRC
+
+* Wednesday
+
+** Post It™
+
+   Let's start by making some small changes to the =index.jade= file.
 
    #+BEGIN_SRC jade
-     doctype html
-     html
-       head
-         include ./includes/bower_header.jade
-         title Welcome #{username}
-       body(ng-app)
-         h1 Hi #{username}
-         h2 Want to play a game?
+     form(name="game", action="/game", method="post")
+       input(type="text", name="username")
+       input(type="submit")
    #+END_SRC
 
-   And now Angular is loaded. Class dismissed...
+   Restart your server, head on over to [[http://localhost:3000]], and
+   give it your name again.
 
-*** Oh, and the other Bootstrap too
+   Ack! What happened?! And where is the username? What did I screw up?
 
-    Start using the CSS classes that Bootstrap provides and the page
-    starts looking nicer.
+*** Update the backend to handle POST requests
+
+    =npm install --save body-parser=
+
+    Update the backend application to use the new module:
+
+    #+BEGIN_SRC js
+      // in index.js
+      var bodyParser = require('body-parser');
+      app.use(bodyParser.urlencoded({ extended: false }));
+    #+END_SRC
+
+    And add a =POST= request handler:
+
+    #+BEGIN_SRC js
+      app.post('/game', function(req, res) {
+          res.render('game', req.body);
+      });
+    #+END_SRC
+
+*** But there's a problem
+
+    Refresh the page. You'll see the =game.jade= template rendered as
+    expected. Try refreshing again. The browser will ask you if you
+    want to re-submit the form.
+
+    Generally, =POST= requests are expected to change the server state
+    somehow (/e.g.,/ submitting a comment on a news article or
+    entering your credit card information to buy a book) while =GET=
+    requests are used to display existing information/data.
+
+    Often, the response to a =POST= request will be a redirection (via
+    an HTTP 30x response) to an appropriate =GET= url based on what
+    was posted (the comment your submitted or your purchase receipt).
+
+    So let's update our =POST= handler to do that instead:
+
+    #+BEGIN_SRC js
+      app.post('/game', function(req, res) {
+          res.redirect('/game?username=' + req.body.username);
+      });
+    #+END_SRC
+
+    It extracts the username value from the =POST= request body and
+    redirects the browser to a =GET= request for the game page with
+    the username in the url, and the =POST= request is removed from
+    the browser history (try the browser back/forward buttons and
+    see!).
+
+** Angular!
+
+*** Install with bower
+
+    - =bower install --save angular=
+
+    - update the include header file to load the Angular code
+
+      #+BEGIN_SRC jade
+        link(href='/bower_components/bootstrap/dist/css/bootstrap.css'
+             rel='stylesheet')
+        script(src='/bower_components/bootstrap/dist/js/bootstrap.js')
+        script(src='/bower_components/angular/angular.js')
+      #+END_SRC
+
+*** Bootstrapping Angular
+
+    We need to get Angular to load, and tell it /where/ to load. All we
+    need to do that is to add the =ng-app= attribute to a HTML
+    element. We'll do it to the =body= tag in =game.jade=
 
     #+BEGIN_SRC jade
       doctype html
-      html(lang="en" ng-app)
+      html
         head
           include ./includes/bower_header.jade
           title Welcome #{username}
-          body
-            .container
-              h1 Hi #{username}
-              h2 Want to play a game?
+        body(ng-app)
+          h1 Hi #{username}
+          h2 Want to play a game?
     #+END_SRC
 
-** Angular without the Javascript
+    And now Angular is loaded. Class dismissed...
 
-*** Interpolation
+**** Oh, and the other Bootstrap too
 
-    Anything in the HTML between ={{= and =}}= is interpreted by
-    Angular and updated with the results
+     Start using the CSS classes that Bootstrap provides and the page
+     starts looking nicer.
 
-    Add a =p= tag to the =body=
+     #+BEGIN_SRC jade
+       doctype html
+       html(lang="en" ng-app)
+         head
+           include ./includes/bower_header.jade
+           title Welcome #{username}
+           body
+             .container
+               h1 Hi #{username}
+               h2 Want to play a game?
+     #+END_SRC
 
-    #+BEGIN_SRC jade
-      p The answer is {{ 47 - 5 }}
-    #+END_SRC
+*** Angular without the Javascript
 
-    Reload and discover the answer.
+**** Interpolation
 
-*** Adding in some data
+     Anything in the HTML between ={{= and =}}= is interpreted by
+     Angular and updated with the results
 
-    Simple calculations are only going to get us so far. Let's get
-    fancy.
+     Add a =p= tag to the =body=
 
-    You can initialize data for a section with the new =ng-init=
-    attribute that Angular provides.
+     #+BEGIN_SRC jade
+       p The answer is {{ 47 - 5 }}
+     #+END_SRC
 
-    #+BEGIN_SRC jade
-      div(ng-init="theAnswer = 47 - 5")
-        p The answer is {{ theAnswer }}
-    #+END_SRC
+     Reload and discover the answer.
 
-*** The magic of binding
+**** Adding in some data
 
-    Static data is only going to get you so far. Change is the only
-    constant in the universe.
+     Simple calculations are only going to get us so far. Let's get
+     fancy.
 
-    #+BEGIN_SRC jade
-      div(ng-init="theAnswer = 47 - 5")
-        p The answer is {{ theAnswer }}
-        button(ng-click="theAnswer = theAnswer + 1") Plus one!
-    #+END_SRC
+     You can initialize data for a section with the new =ng-init=
+     attribute that Angular provides.
 
-*** Repetition is key
+     #+BEGIN_SRC jade
+       div(ng-init="theAnswer = 47 - 5")
+         p The answer is {{ theAnswer }}
+     #+END_SRC
 
-    First, we need a list. Let's update the =ng-init= attribute to
-    create it.
+**** The magic of binding
 
-    #+BEGIN_SRC jade
-      div(ng-init="theList = ['David', 'John', 'Lee']")
-        ul
-          li(ng-repeat="name in theList") {{ name }}      
-    #+END_SRC
+     Static data is only going to get you so far. Change is the only
+     constant in the universe.
 
-*** Add to the list
+     #+BEGIN_SRC jade
+       div(ng-init="theAnswer = 47 - 5")
+         p The answer is {{ theAnswer }}
+         button(ng-click="theAnswer = theAnswer + 1") Plus one!
+     #+END_SRC
 
-    An input can be tied to an Angular variable. And we can use that
-    elsewhere.
+**** Repetition is key
 
-    #+BEGIN_SRC jade
-      .form-group
-        label Name to add
-        input(type="text", ng-model="newName", class='form-control)
-      button(class='btn btn-default' ng-click="theList.push(newName); newName = ''") Add name
-    #+END_SRC
+     First, we need a list. Let's update the =ng-init= attribute to
+     create it.
 
-*** We don't need to see the whole list
+     #+BEGIN_SRC jade
+       div(ng-init="theList = ['David', 'John', 'Lee']")
+         ul
+           li(ng-repeat="name in theList") {{ name }}      
+     #+END_SRC
 
-    We can filter the list. Interactively, even!
+**** Add to the list
 
-    #+BEGIN_SRC jade
-      div(ng-init="theList = ['David', 'John', 'Lee']")
-        .form-group
-          label Name to add
-          input(type='text', ng-model='newName', class='form-control')
-        button(class='btn btn-default' ng-click="theList.push(newName); newName = ''") Add
-        .form-group
-          label Filter
-          input(type='text', ng-model='nameFilter', class='form-control')
-        ul
-          li(ng-repeat="name in theList | filter:nameFilter") {{ name }}
-    #+END_SRC
+     An input can be tied to an Angular variable. And we can use that
+     elsewhere.
+
+     #+BEGIN_SRC jade
+       .form-group
+         label Name to add
+         input(type="text", ng-model="newName", class='form-control)
+       button(class='btn btn-default' ng-click="theList.push(newName); newName = ''") Add name
+     #+END_SRC
+
+**** We don't need to see the whole list
+
+     We can filter the list. Interactively, even!
+
+     #+BEGIN_SRC jade
+       div(ng-init="theList = ['David', 'John', 'Lee']")
+         .form-group
+           label Name to add
+           input(type='text', ng-model='newName', class='form-control')
+         button(class='btn btn-default' ng-click="theList.push(newName); newName = ''") Add
+         .form-group
+           label Filter
+           input(type='text', ng-model='nameFilter', class='form-control')
+         ul
+           li(ng-repeat="name in theList | filter:nameFilter") {{ name }}
+     #+END_SRC
+
+**** Tic Tac Toe Board
+*** Board as angular controller
+**** Extra functionality!
+*** Board as angular directive
