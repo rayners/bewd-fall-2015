@@ -1,0 +1,285 @@
+
+* Data Storage
+
+   - SQL (Postgres)
+   - NoSQL
+     - Key/value stores
+     - Document stores
+   - Getting data from the database to the browser and back
+
+* Monday
+
+** Followups
+*** =package.json= and the =main= key
+
+    We have been running out server with =node ./index.js=, treating
+    node as a simple interpreter. We already know that =npm= reads (and
+    writes) our =package.json= file so we can install packages. As it
+    turns out, =node= can get information out of it too!
+
+    #+BEGIN_SRC json
+      {
+        "name": "tictactoe",
+        "version": "1.0.0",
+        "description": "Tic Tac Toe Web!",
+        "main": "index.js",
+        "scripts": {
+          "test": "echo \"Error: no test specified\" && exit 1"
+        },
+        "author": "",
+        "license": "ISC",
+        "dependencies": {
+          "body-parser": "^1.14.0",
+          "bower": "^1.5.2",
+          "express": "^4.13.3",
+          "jade": "^1.11.0"
+        }
+      }
+    #+END_SRC
+
+    Notice the =main= value in there? If given a directory (containing
+    a =package.json= file) instead of a file, =node= will execute the
+    file indicated by the =main= key. Give it a try!
+
+    #+BEGIN_SRC shell
+      ~/Code/tictactoe % node .
+      Example app listening at http://:::3000
+    #+END_SRC
+
+    Or even, from another location on the file system!
+
+    #+BEGIN_SRC shell
+      ~/Code % node tictactoe
+      Example app listening at http://:::3000
+    #+END_SRC
+
+*** Anything else? …
+
+** Databases
+
+   Or, trying not to lose data when the user closes their browser.
+
+*** ORM
+
+    ORM = Object-Relational Mapping
+
+    It's a library that bridges objects in our code with storage in
+    the database, so we can focus on our logic and leave the details
+    of the data storage wiring to it.
+
+*** What are we using
+
+    Sequelize!
+
+*** Add to our project
+
+    - =npm install --save sqlite3 sequelize sequelize-cli=
+    - =./node_modules/.bin/sequelize init=
+
+      #+BEGIN_SRC shell
+        ~/Code/tictactoe % ./node_modules/.bin/sequelize init
+
+        Sequelize [Node: 0.12.7, CLI: 1.9.1, ORM: 3.9.0]
+
+        Using gulpfile ~/Code/tictactoe/node_modules/sequelize-cli/lib/gulpfile.js
+        Starting 'init:config'...
+        Created "config/config.json"
+        Starting 'init:migrations'...
+        Successfully created migrations folder at "/Users/draynes14/Code/tictactoe/migrations".
+        Finished 'init:migrations' after 761 μs
+        Successfully created seeders folder at "/Users/draynes14/Code/tictactoe/seeders".
+        Finished 'init:seeders' after 554 μs
+        Successfully created models folder at "/Users/draynes14/Code/tictactoe/models".
+        Loaded configuration file "config/config.json".
+        Using environment "development".
+        Finished 'init:models' after 4.03 ms
+        Finished 'init' after 28 μs
+      #+END_SRC
+
+    - Update the =config/config.json= file
+
+      #+BEGIN_SRC json
+        {
+            "development": {
+                "storage": "store/tictactoe.db",
+                "dialect": "sqlite"
+            },
+            "test": {
+                "dialect": "sqlite"
+            },
+            "production": {
+                "dialect": "sqlite"
+            }
+        }
+      #+END_SRC
+
+** STOP! Git time!
+
+   - =git init=
+   - Create =.gitignore=
+
+     #+BEGIN_EXAMPLE
+       node_modules
+       bower_components
+       store
+       npm-debug.log
+     #+END_EXAMPLE
+
+   - =git add .=
+   - =git status=
+   - =git commit -m 'Initial commit'=
+
+*** BEWD Next (Top) Model
+
+    Before we store anything in the database, we need to define a
+    model. A model contains the mapping between an Javascript object
+    and the database itself, and is a good place to store any logic we
+    want to associate with it.
+
+    - What should we be storing? :: The tic tac toe board!
+    - How should we store it? :: That's a pretty complicated question.
+         There are many tradeoffs to consider. For now, we will store
+         it as a simple string.
+
+*** Creating the model
+
+   - Create the model from the command line
+
+     #+BEGIN_SRC shell
+       ~/Code/tictactoe (git)-[master] % ./node_modules/.bin/sequelize model:create --name Board --attributes board:string
+
+       Sequelize [Node: 0.12.7, CLI: 1.9.1, ORM: 3.9.0, sqlite3: ^3.1.0]
+
+       Loaded configuration file "config/config.json".
+       Using environment "development".
+       Using gulpfile ~/Code/tictactoe/node_modules/sequelize-cli/lib/gulpfile.js
+       Starting 'model:create'...
+       Finished 'model:create' after 7.23 ms
+     #+END_SRC
+
+   - Take a look at the files it created. Notice, it's just code. You
+     could do it manually if you wanted or needed to. But we're lazy.
+
+   - There's nothing in the =store/= directory!
+
+   - We need to actually /run/ the migration.
+
+     #+BEGIN_SRC shell
+       ~/Code/tictactoe (git)-[master] % ./node_modules/.bin/sequelize db:migrate
+
+       Sequelize [Node: 0.12.7, CLI: 1.9.1, ORM: 3.9.0, sqlite3: ^3.1.0]
+
+       Loaded configuration file "config/config.json".
+       Using environment "development".
+       Using gulpfile ~/Code/tictactoe/node_modules/sequelize-cli/lib/gulpfile.js
+       Starting 'db:migrate'...
+       == 20150920192311-create-board: migrating =======
+       == 20150920192311-create-board: migrated (0.015s)
+     #+END_SRC
+
+     #+BEGIN_SRC shell
+       ~/Code/tictactoe (git)-[master] % sqlite3 store/tictactoe.db
+       SQLite version 3.8.5 2014-08-15 22:37:57
+       Enter ".help" for usage hints.
+       sqlite> .schema
+       CREATE TABLE `SequelizeMeta` (`name` VARCHAR(255) NOT NULL UNIQUE PRIMARY KEY);
+       CREATE TABLE `Boards` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `board` VARCHAR(255), `createdAt` DATETIME NOT NULL, `updatedAt` DATETIME NOT NULL);
+       sqlite> .headers on
+       sqlite> select * from SequelizeMeta;
+       name
+       20150920192311-create-board.js
+       sqlite> .quit
+     #+END_SRC
+
+*** Wiring it into the application
+
+    This all does us no good if the server application isn't aware of any of it.
+
+    #+BEGIN_SRC js
+    var models = require('./models');
+    #+END_SRC
+
+    That's it. The =models/index.js= file created by the =serialize=
+    tool handles loading all of our models for us.
+
+    #+BEGIN_SRC js
+      app.get('/games', function(req, res) {
+          models.Board.findAll().then(function(boards) {
+              res.send(JSON.stringify(boards));
+          });
+      });
+    #+END_SRC
+
+    Restart the app and head on over to
+    [[http://localhost:3000/games]]. What do you see? An empty array! We
+    should add some data.
+
+    Let's start by doing it the hard way.
+
+    #+BEGIN_SRC shell
+      ~/Code/tictactoe (git)-[master]U % sqlite3 store/tictactoe.db
+      SQLite version 3.8.5 2014-08-15 22:37:57
+      Enter ".help" for usage hints.
+      sqlite> .schema
+      CREATE TABLE `SequelizeMeta` (`name` VARCHAR(255) NOT NULL UNIQUE PRIMARY KEY);
+      CREATE TABLE `Boards` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `board` VARCHAR(255), `createdAt` DATETIME NOT NULL, `updatedAt` DATETIME NOT NULL);
+      sqlite> insert into Boards ('board', 'createdAt', 'updatedAt') values ('XXXXXXXXX', datetime('now'), datetime('now'));
+      sqlite> select * from Boards;
+      1|XXXXXXXXX|2015-09-21 00:55:18|2015-09-21 00:55:18
+      sqlite> .quit
+    #+END_SRC
+
+    Refresh the page and let's see what we get.
+
+    It's an array!
+
+    Notice any differences between the database and how we've
+    represented boards before? Let's make some changes to our model.
+
+*** Translating from the data to the app
+
+    - How we store the data and how it's used might differ in some ways.
+
+    - Sequelize allows us to add functions to transform the data coming out of the database
+
+      #+BEGIN_SRC js
+          var Board = sequelize.define('Board', {
+              board: {
+                  type: DataTypes.STRING,
+                  get: function() {
+                      // Just trust me on this
+                      // This will split the string into groups of three
+                      return this.getDataValue('board').match(/.{3}/g).map(function(row) {
+                          return row.split('');
+                      });
+                  }
+              }
+      #+END_SRC
+
+    - Restart and refresh. See what we get? The data in the database
+      hasn't changed, but the object coming out did.
+
+*** Getting more data in!
+
+    - So many ways, let's try the command line/REPL first.
+
+      #+BEGIN_SRC shell
+        ~/Code/tictactoe (git)-[master]U % node
+        > var models = require('./models');
+        undefined
+        > models.Board.create({ board: 'OOOOOOOOO' })
+      #+END_SRC
+
+*** Drilling down in the web
+
+    - We don't have to retrieve all the boards every time. Let's get just one
+
+      #+BEGIN_SRC js
+        app.get('/games/:game_id', function(req, res) {
+            models.Board.findById(req.params.game_id).then(function(board) {
+                res.send(JSON.stringify(board));
+            });
+        });
+      #+END_SRC
+
+    - [[http://localhost:3000/games/1]]
