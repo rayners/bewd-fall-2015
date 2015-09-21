@@ -283,3 +283,18 @@
       #+END_SRC
 
     - [[http://localhost:3000/games/1]]
+
+*** Double checking submissions
+
+    - Users lie, are incorrect and often mistaken. They screw up. We
+      need to stop it.
+
+      #+BEGIN_SRC js
+        validate: {
+            len: 9,
+            is: {
+                args: /^[XO ]$/,
+                msg: 'Must be a valid tic tac toe board'
+            }
+        }
+      #+END_SRC
