@@ -293,8 +293,44 @@
         validate: {
             len: 9,
             is: {
-                args: /^[XO ]$/,
+                args: /^[XO ]+$/,
                 msg: 'Must be a valid tic tac toe board'
             }
         }
       #+END_SRC
+
+*** Creating from the web
+
+    #+BEGIN_SRC js
+      app.post('/games', function(req, res) {
+          models.Board.create({ board: req.body.board })
+              .then(function(board) {
+                  res.redirect('/games/' + board.id);
+              });
+      });
+    #+END_SRC
+
+    #+BEGIN_SRC shell
+      ~/Code/tictactoe (git)-[master]U % curl -v -XPOST -d "board=XXXXXXXXX" http://localhost:3000/games
+      ,*   Trying ::1...
+      ,* Connected to localhost (::1) port 3000 (#0)
+      > POST /games HTTP/1.1
+      > Host: localhost:3000
+      > User-Agent: curl/7.43.0
+      > Accept: */*
+      > Content-Length: 15
+      > Content-Type: application/x-www-form-urlencoded
+      >
+      ,* upload completely sent off: 15 out of 15 bytes
+      < HTTP/1.1 302 Moved Temporarily
+      < X-Powered-By: Express
+      < Location: /games/6
+      < Vary: Accept
+      < Content-Type: text/plain; charset=utf-8
+      < Content-Length: 42
+      < Date: Mon, 21 Sep 2015 02:25:04 GMT
+      < Connection: keep-alive
+      <
+      ,* Connection #0 to host localhost left intact
+      Moved Temporarily. Redirecting to /games/6
+    #+END_SRC
