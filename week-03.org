@@ -334,3 +334,49 @@
       ,* Connection #0 to host localhost left intact
       Moved Temporarily. Redirecting to /games/6
     #+END_SRC
+
+*** POST with JSON instead of a bare string
+
+    - Let's make things consistent on this side of the
+      database. First, the model.
+
+      #+BEGIN_SRC js
+        set: function(boardArray) {
+            this.setDataValue(boardArray.map(function(row) { return row.join(''); } ).join(''));
+        }
+      #+END_SRC
+
+    - Then the app
+
+      #+BEGIN_SRC js
+      app.use(bodyParser.json());
+      #+END_SRC
+
+    - Oh, that's it. All that changes is how the field itself is
+      represented. Might be worth double checking your validations
+      too.
+
+      #+BEGIN_SRC shell
+        ~/Code/tictactoe (git)-[master]U % curl -v -XPOST -H 'Content-Type: application/json' -d '{"board": [["X","X","X"],["O","O","O"],["X","X","X"]]}' http://localhost:3000/games
+        ,*   Trying ::1...
+        ,* Connected to localhost (::1) port 3000 (#0)
+        > POST /games HTTP/1.1
+        > Host: localhost:3000
+        > User-Agent: curl/7.43.0
+        > Accept: */*
+        > Content-Type: application/json
+        > Content-Length: 54
+        >
+        ,* upload completely sent off: 54 out of 54 bytes
+        < HTTP/1.1 302 Moved Temporarily
+        < X-Powered-By: Express
+        < Location: /games/8
+        < Vary: Accept
+        < Content-Type: text/plain; charset=utf-8
+        < Content-Length: 42
+        < Date: Mon, 21 Sep 2015 02:41:06 GMT
+        < Connection: keep-alive
+        <
+        ,* Connection #0 to host localhost left intact
+        Moved Temporarily. Redirecting to /games/8
+      #+END_SRC
