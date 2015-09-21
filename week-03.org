@@ -1,12 +1,4 @@
 
-* Data Storage
-
-   - SQL (Postgres)
-   - NoSQL
-     - Key/value stores
-     - Document stores
-   - Getting data from the database to the browser and back
-
 * Monday
 
 ** Followups
