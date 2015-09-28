@@ -135,6 +135,8 @@
 
 *** Creating the model
 
+    - Create your =store/= directory with =mkdir store=
+
    - Create the model from the command line
 
      #+BEGIN_SRC shell
