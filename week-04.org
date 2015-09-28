@@ -121,6 +121,8 @@ tools to help with that.
    to use cookies.
 
    #+BEGIN_SRC js
+     // ./index.js
+
      app.post('/game', function(req, res) {
          res.cookie('playerName', req.body.username);
          res.redirect('/game');
@@ -188,6 +190,8 @@ tools to help with that.
    and make use of the cookie that the browser sends with the request.
 
    #+BEGIN_SRC js
+     // ./index.js
+
      app.get('/game', function(req, res) {
          var playerName = req.cookies.playerName;
          res.render('game', { username: playerName });
@@ -200,6 +204,8 @@ tools to help with that.
    - =npm install --save cookie-parser=
 
    #+BEGIN_SRC js
+     // ./index.js
+
      var cookieParser = require('cookie-parser');
      app.use(cookieParser());
    #+END_SRC
@@ -239,6 +245,8 @@ tools to help with that.
     - =npm install --save express-session=
 
     #+BEGIN_SRC js
+      // ./index.js
+
       var session = require('express-session');
       app.use(cookieParser());
       app.use(session({
@@ -253,6 +261,8 @@ tools to help with that.
     - =npm install --save connect-session-sequelize=
 
     #+BEGIN_SRC js
+      // ./index.js
+
       var cookieParser = require('cookie-parser');
       var session = require('express-session');
 
@@ -282,6 +292,8 @@ tools to help with that.
     And now we can store the user's data in a session instead of directly in the cookie.
 
     #+BEGIN_SRC js
+      // ./index.js
+
       app.get('/game', function(req, res) {
         var playerName = req.session.playerName;
         res.render('game', { username: playerName });
