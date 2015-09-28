@@ -1,0 +1,213 @@
+#+OPTIONS: h:4 toc:nil
+
+* Monday
+
+** Followups
+
+*** sequence diagram
+
+#+CAPTION: Viewing a game page and clicking the Make Your Move button
+[[./sequence.png]]
+
+*** Constant Restarts
+
+Restarting the server whenever we make a change stinks. And we
+constantly forget and wonder why our code isn't working. There are
+tools to help with that.
+
+**** Gulp!
+
+     It's a modern kind of [[https://en.wikipedia.org/wiki/Make_(software)][~make~]]. You define tasks and what triggers
+     them.
+     
+     - =npm install -g gulp=
+     - =npm install --save-dev gulp=
+     
+     This will add it to your ~package.json~ file, in the
+     ~devDependencies~ section instead of ~dependencies~.
+
+     #+BEGIN_SRC js
+       // gulpfile.js
+
+       var gulp = require('gulp');
+
+       gulp.task('myTask', function() {
+           console.log('Running my task!');
+       });
+     #+END_SRC
+
+     #+BEGIN_SRC shell
+       ~/Code/tictactoe (git)-[master]U % gulp myTask
+       [22:02:39] Using gulpfile ~/Code/tictactoe/gulpfile.js
+       [22:02:39] Starting 'myTask'...
+       Running my task!
+       [22:02:39] Finished 'myTask' after 116 μs
+     #+END_SRC
+
+     Exciting, right?!
+
+     No?
+
+     Okay, maybe something a little more practical, like running the
+     server.
+
+     - =npm install --save-dev gulp-live-server=
+
+     #+BEGIN_SRC js
+       var gulp = require('gulp'),
+           gls = require('gulp-live-server');
+
+       gulp.task('server', function() {
+           var server = gls('.');
+           server.start();
+       });
+     #+END_SRC
+
+     #+BEGIN_SRC shell
+       ~/Code/tictactoe (git)-[master]U % gulp server
+       [22:07:20] Using gulpfile ~/Code/tictactoe/gulpfile.js
+       [22:07:20] Starting 'server'...
+       [22:07:20] Finished 'server' after 8.53 ms
+       livereload[tiny-lr] listening on 35729 ...
+       Example app listening at http://:::3000
+     #+END_SRC
+
+     So how is this any different than just running =node ./index.js=
+     or =node .=? Well, right now it's not. But =gulp= has more for
+     us!
+
+     #+BEGIN_SRC js
+       var gulp = require('gulp'),
+           gls = require('gulp-live-server');
+
+       gulp.task('server', function() {
+           var server = gls('.');
+           server.start().then(function(result) {
+               console.log('Server exited with result:', result);
+           });
+           return gulp.watch('index.js', function(file) {
+               server.start.apply(server);
+           });
+       });
+     #+END_SRC
+
+     Update a file and watch what happens. You can open up a new
+     terminal window, go to your tictactoe project directory, and run
+     =touch index.js=; that updates the file without actually making
+     any changes to it.
+
+     But what if we change a model file? Easy! Just a one line change:
+
+     #+BEGIN_SRC js
+       return gulp.watch(['index.js', 'models/*.js'], function(file) {
+           server.start.apply(server);
+       });
+     #+END_SRC
+
+*** webpack
+*** ???
+
+** Cookies! 🍪
+
+   Yum!
+
+   Okay, maybe not.
+
+   So what are cookies? Cookies are bits of data stored in the browser
+   for a particular domain/path combination that are included with
+   every request to it. And they expire.
+
+   How do we set them? Let's update the handlers for the =/game= url
+   to use cookies.
+
+   #+BEGIN_SRC js
+     app.post('/game', function(req, res) {
+         res.cookie('playerName', req.body.username);
+         res.redirect('/game');
+     });
+   #+END_SRC
+
+   Then we just restart the server…
+
+   OH RIGHT!
+
+   #+BEGIN_SRC shell
+     ~/Code/tictactoe (git)-[master]U % curl -c cookiejar.txt -XPOST -v -d 'username=rayners' http://localhost:3000/game
+     ,*   Trying ::1...
+     ,* Connected to localhost (::1) port 3000 (#0)
+     > POST /game HTTP/1.1
+     > Host: localhost:3000
+     > User-Agent: curl/7.43.0
+     > Accept: */*
+     > Content-Length: 16
+     > Content-Type: application/x-www-form-urlencoded
+     >
+     ,* upload completely sent off: 16 out of 16 bytes
+     < HTTP/1.1 302 Moved Temporarily
+     < X-Powered-By: Express
+     ,* Added cookie playerName="rayners" for domain localhost, path /, expire 0
+     < Set-Cookie: playerName=rayners; Path=/
+     < Location: /game
+     < Vary: Accept
+     < Content-Type: text/plain; charset=utf-8
+     < Content-Length: 39
+     < Date: Mon, 28 Sep 2015 03:27:02 GMT
+     < Connection: keep-alive
+     <
+     ,* Connection #0 to host localhost left intact
+     Moved Temporarily. Redirecting to /game
+
+   #+END_SRC
+
+   Now the cookie is stored in =cookiejar.txt= and we can send it back to the server.
+
+   #+BEGIN_SRC shell
+     ~/Code/tictactoe (git)-[master]U % curl -b cookiejar.txt -v http://localhost:3000/game
+     ,*   Trying ::1...
+     ,* Connected to localhost (::1) port 3000 (#0)
+     > GET /game HTTP/1.1
+     > Host: localhost:3000
+     > User-Agent: curl/7.43.0
+     > Accept: */*
+     > Cookie: playerName=rayners
+     >
+     < HTTP/1.1 200 OK
+     < X-Powered-By: Express
+     < Content-Type: text/html; charset=utf-8
+     < Content-Length: 1252
+     < ETag: W/"4e4-DCWJw7vp7Hvh+n92QKXhHg"
+     < Date: Mon, 28 Sep 2015 03:29:27 GMT
+     < Connection: keep-alive
+     <
+     ,* Connection #0 to host localhost left intact
+
+   #+END_SRC
+
+   If you look at the page for [[http://localhost:3000/game][=/game=]], you'll notice it doesn't
+   display anything though. We need to update the server to recognize
+   and make use of the cookie that the browser sends with the request.
+
+   #+BEGIN_SRC js
+     app.get('/game', function(req, res) {
+         var playerName = req.cookies.playerName;
+         res.render('game', { username: playerName });
+     });
+   #+END_SRC
+
+   Kaboom! Okay, so we are outside what comes with express out of the
+   box once again. But it's a simple addition.
+
+   - =npm install --save cookie-parser=
+
+   #+BEGIN_SRC js
+     var cookieParser = require('cookie-parser');
+     app.use(cookieParser());
+   #+END_SRC
+
+* Original notes
+** Authentication, authorization, and sessions
+
+    - Password forms
+    - User data storage (and what *not* to do)
+    - Cookies vs tokens/auth headers
+    - Events

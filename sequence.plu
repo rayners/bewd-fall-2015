@@ -1,0 +1,63 @@
+@startuml
+
+title Viewing a game board and clicking the Make Your Move button
+hide footbox
+
+actor User
+
+box "Browser/front end"
+    control Angular
+    participant Browser
+end box
+
+box "Node/server"
+    participant "Server (index.js)" as Server
+    participant Jade
+    participant game.jade
+    database SQLite
+end box
+
+autonumber "<b>(##)"
+
+User -> Browser: Clicks on Game #14 link
+activate Browser
+Browser -> Server: GET /games/14
+activate Browser
+activate Server
+Server -> SQLite: models.Board.findById(14)
+
+activate SQLite
+SQLite --> Server: { id: 14, board: 'XXXOOOXXX' }
+deactivate SQLite
+
+Server -> Jade: Load jade
+activate Jade
+Jade -> game.jade: Load template and pass game data
+activate game.jade
+game.jade --> Server: Render HTML
+deactivate game.jade
+deactivate Jade
+
+Server --> Browser: Return HTML
+deactivate Browser
+deactivate Server
+
+Browser -> Server: Load angular
+activate Server
+
+create Angular
+Server --> Angular: Serve Angular javascript files
+activate Angular
+deactivate Server
+
+Angular --> Browser: Build game board
+Browser --> User: Look at my fancy board!
+
+User -> Browser: Clicks make your move button
+Browser -> Angular: User clicked it!
+Angular -> Angular: Update board state
+Angular -> Browser: Update board display
+Browser --> User: "Y" in that one spot
+
+deactivate Browser
+@enduml
