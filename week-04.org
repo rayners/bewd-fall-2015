@@ -17,7 +17,7 @@ tools to help with that.
 
 **** Gulp!
 
-     It's a modern kind of [[https://en.wikipedia.org/wiki/Make_(software)][=make=]]. You define tasks and what triggers
+     It's a modern kind of [[https://en.wikipedia.org/wiki/Make_(software)][make]]. You define tasks and what triggers
      them.
      
      - =npm install -g gulp=
@@ -183,7 +183,7 @@ tools to help with that.
 
    #+END_SRC
 
-   If you look at the page for [[http://localhost:3000/game][=/game=]], you'll notice it doesn't
+   If you look at the page for [[http://localhost:3000/game][/game]] you'll notice it doesn't
    display anything though. We need to update the server to recognize
    and make use of the cookie that the browser sends with the request.
 
