@@ -204,6 +204,95 @@ tools to help with that.
      app.use(cookieParser());
    #+END_SRC
 
+   So what should get stored in a cookie? */Never store anything in a
+   cookie that you would be uncomfortable with a user editing./* For
+   example:
+
+   - Anything involving money, really
+     - Account balance
+     - Shopping cart total
+   - Database ids
+
+   So what does that leave us?
+
+*** Sessions
+
+    What's a session? Volatile/temporary data[fn:: Volatile meaning
+    that it could expire and go away, kept in non-permanent storage]
+    stored on the server-side, referenced by an identifying value
+    stored in a user's cookie.
+
+    Where is the data stored then? That's up to you! The default
+    session store is in memory, but when the server gets restarted,
+    the data goes away (*super* volatile). And it's less useful in an
+    environment where multiple server instances are running on
+    multiple machines, and a given user could be handled by any of
+    them.
+
+    For smaller applications, data could be stored in a database
+    backend. As the database grows, it is important to remember that
+    the session data is going to a large amount of turnover, which
+    could potentially be taxing to the database. There are more
+    specialized data storage options worth considering as well, but we
+    aren't going to go into them.
+
+    - =npm install --save express-session=
+
+    #+BEGIN_SRC js
+      var session = require('express-session');
+      app.use(cookieParser());
+      app.use(session({
+          secret: 'I see dead people'
+      }));
+    #+END_SRC
+
+    That stores in it memory, but that's a little too flaky I
+    think. Let's use a database! And we already have sequelize
+    installed.
+
+    - =npm install --save connect-session-sequelize=
+
+    #+BEGIN_SRC js
+      var cookieParser = require('cookie-parser');
+      var session = require('express-session');
+
+      var Sequelize = require('sequelize');
+      var SequelizeStore = require('connect-session-sequelize')(session.Store);
+
+      var sequelize = new Sequelize(
+        "database",
+        "username",
+        "password", {
+          "dialect": "sqlite",
+          "storage": "./store/session.sqlite"
+        });
+
+      var store = new SequelizeStore({ db: sequelize });
+      store.sync();
+
+      app.use(cookieParser());
+      app.use(session({
+        saveUninitialized: false,
+        resave: true,
+        secret: 'I see dead people',
+        store: store
+      }));
+    #+END_SRC
+
+    And now we can store the user's data in a session instead of directly in the cookie.
+
+    #+BEGIN_SRC js
+      app.get('/game', function(req, res) {
+        var playerName = req.session.playerName;
+        res.render('game', { username: playerName });
+      });
+
+      app.post('/game', function(req, res) {
+        req.session.playerName = req.body.username;
+        res.redirect('/game');
+      });
+    #+END_SRC
+
 * Original notes
 ** Authentication, authorization, and sessions
 
