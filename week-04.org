@@ -305,10 +305,69 @@ tools to help with that.
       });
     #+END_SRC
 
+* Wednesday
+
+  The theme for today is de-complex-ing our application.
+
+  - DRY :: Don't Repeat Yourself
+  - SOC :: Separation of Concerns
+  - SRP :: Single Responsibility Principle
+  - LoD :: Law of Demeter, loose coupling
+  - POLA :: Principle of Least Astonishment
+  - DI :: Dependency Injection
+  - ABC :: Always Be Checking your tests
+  - Dogfooding
+
+** Jade layouts
+
+   We're writing a bunch of repetitive template code, haven't you
+   noticed? Most templating systems allow have ways to make that
+   easier.
+
+   Let's start by defining the rough structure of pages for our
+   application.
+
+   #+BEGIN_SRC jade
+     //- ./views/layout.jade
+     doctype html
+     html
+       head
+         include ./includes/bower_bootstrap.jade
+         block title
+           title Tic Tac Toe Time!
+
+       body
+         include ./includes/flash.jade
+         .container
+            block content
+   #+END_SRC
+
+   And the updated =index.jade= file becomes a little simpler.
+
+   #+BEGIN_SRC jade
+     extends ./layout.jade
+
+     block title
+       title Hello world!
+
+     block content
+       h1 Hello fellow citizens!
+
+       form(name="game", action="/game", method="post")
+         input(type="text", name="username")
+         input(type="submit")
+
+   #+END_SRC
+
+   It doesn't look extremely different, but the focus of the template
+   has now become the content specific to the page in question,
+   instead of all the overall HTML structure.
+
+** Handlers for all requests
+*** Passing values to every template
+
 * Original notes
 ** Authentication, authorization, and sessions
 
-    - Password forms
-    - User data storage (and what *not* to do)
     - Cookies vs tokens/auth headers
     - Events
