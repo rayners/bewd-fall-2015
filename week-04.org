@@ -346,6 +346,10 @@ tools to help with that.
   - ABC :: Always Be Checking your tests
   - Dogfooding
 
+** eslint
+
+   [[file:week-02.org::*ESLint setup for atom][See previous notes]]
+
 ** Jade layouts
 
    We're writing a bunch of repetitive template code, haven't you
