@@ -344,7 +344,7 @@ tools to help with that.
   - POLA :: Principle of Least Astonishment
   - DI :: Dependency Injection
   - ABC :: Always Be Checking your tests
-  - Dogfooding
+  - Dogfooding :: Using what you build
 
 ** eslint
 
