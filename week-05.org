@@ -1,0 +1,407 @@
+* Monday
+
+** Adding email to the user
+
+*** Start with the model
+
+   #+BEGIN_SRC shell
+     ~/Code/tictactoe (git)-[master] % ./node_modules/.bin/sequelize migration:create --name AddEmailToUser
+
+     Sequelize [Node: 0.12.7, CLI: 1.9.1, ORM: 3.9.0, sqlite3: ^3.1.0]
+
+     Loaded configuration file "config/config.json".
+     Using environment "development".
+     Using gulpfile ~/Code/tictactoe/node_modules/sequelize-cli/lib/gulpfile.js
+     Starting 'migration:create'...
+     Successfully created migrations folder at "/Users/draynes14/Code/tictactoe/migrations".
+     New migration was created at /Users/draynes14/Code/tictactoe/migrations/20151004104603-AddEmailToUser.js .
+     Finished 'migration:create' after 10 ms
+   #+END_SRC
+
+   #+BEGIN_SRC js
+     // migrations/XXXXXXXXXXXXXX-AddEmailToUser.js
+     'use strict';
+
+     module.exports = {
+       up: function (queryInterface, Sequelize) {
+         /*
+           Add altering commands here.
+           Return a promise to correctly handle asynchronicity.
+
+           Example:
+           return queryInterface.createTable('users', { id: Sequelize.INTEGER });
+         ,*/
+       },
+
+       down: function (queryInterface, Sequelize) {
+         /*
+           Add reverting commands here.
+           Return a promise to correctly handle asynchronicity.
+
+           Example:
+           return queryInterface.dropTable('users');
+         ,*/
+       }
+     };
+   #+END_SRC
+
+   #+BEGIN_SRC js
+     // migrations/XXXXXXXXXXXXXX-AddEmailToUser.js
+     'use strict';
+
+     module.exports = {
+       up: function (queryInterface, Sequelize) {
+         queryInterface.addColumn('Users', 'email', Sequelize.STRING);
+       },
+
+       down: function (queryInterface, Sequelize) {
+         queryInterface.removeColumn('Users', 'email');
+       }
+     };
+   #+END_SRC
+
+*** Why type so much?
+
+    =gulp server= seems like a lot of typing, when we are always just
+    running the server. =gulp= can have a default task.
+
+    #+BEGIN_SRC js
+      // gulpfile.js
+      gulp.task('default', ['server']);
+    #+END_SRC
+
+    Now you only need to run =gulp=, without any arguments.
+
+*** Now update the registration page
+
+    - Make sure the =layout.jade= file has the angular bits need to
+      bootstrap it. Specifically,
+      ~html(ng-app="bewd.tictactoe.board")~.
+    - Update the existing =input= elements to add the =required=
+      attribute (~input.form-control(… required)~).
+    - Add a new field for email. Use =email= as the type.
+    - Refresh the page and try to put missing or bad information into
+      your form.
+
+*** Form validations
+
+   How do we make sure the users aren't submitting something we know
+   is going to fail? Form validation! Better if we tell them ahead of
+   time what's wrong instead of waiting until they try and submit
+   something though. Angular gives us some pretty extensive options
+   out of the box; we just need to tie it together with bootstrap.
+
+   - Add =ng-class= to all the =.form-group= divs:
+     #+BEGIN_EXAMPLE
+     ng-class="{'has-error': register.<inputname>.$invalid }"
+     #+END_EXAMPLE
+   - Add =ng-model= to all the =input= tags. We're not using it (yet),
+     but it is required to trigger some of the angular behavior.
+   - Add the =control-label= class to all the labels (bootstrap CSS
+     class that I forgot).
+   - Refresh and enjoy!
+
+   Okay, so maybe it isn't perfect. The forms seems to say it's
+   completely invalid without even any data in it! The angular form
+   and model controllers give us an additional value to work with:
+   =$dirty=. We can tie that into the =ng-class= directive as well.
+
+   For most of the fields, that's enough. Not so much for the email
+   field though. Since the validation is a little more strict, as soon
+   as you start typing, it becomes invalid, even though you haven't
+   finished entering a value yet.
+
+   There are a couple ways to deal with that by using the
+   =ng-model-options= attribute we get from angular to specify how we
+   want angular to handle the form events[fn:events].
+
+   - =updateOn= controls which events will cause a validation check to
+     happen.
+     #+BEGIN_EXAMPLE
+     ng-model-options="{ updateOn: 'default' }"
+     #+END_EXAMPLE
+   - =debounce= controls how long to wait after a user stops doing
+     something before starting the validation check. Either a number
+     for milliseconds, or an object defining the number of
+     milliseconds for each type of event.
+     #+BEGIN_EXAMPLE
+     ng-model-options="{ debounce: { default: 500, blur: 0 } }"
+     #+END_EXAMPLE
+
+*** Better errors
+
+    - Explore the value of =register.email.$error= in your
+      registration page. Simply add ={{ register.email.$error }}= to
+      your jade template.
+    - We could use ng-if and ng-hide/show to display (or not) error
+      messages for those specific error states.
+
+    #+BEGIN_SRC jade
+      //- register.jade
+      .alert.alert-warning(ng-if="register.email.$error.required")
+        p Email is required.
+      .alert.alert-danger(ng-if="register.email.$error.email")
+        p Email must be an email address.
+    #+END_SRC
+
+    Give it a whirl!
+
+*** Even better errors!
+
+    - Install the =angular-messages= bower package
+    - Update the header include jade template to add script tags to
+      load the angular-messages JavaScript
+    - We could add =ngMessages= to the module dependencies for our
+      angular module, but it might be better to create a higher level
+      module; having the board module be the main one seems wrong
+      somehow.
+
+    #+BEGIN_SRC js
+      // public/js/app.js
+      (function() {
+        angular.module('bewd.tictactoe', ['bewd.tictactoe.board', 'ngMessages']);
+      })();
+    #+END_SRC
+
+    #+BEGIN_SRC jade
+      script(src='/bower_components/jquery/dist/jquery.js')
+      link(href='/bower_components/bootstrap/dist/css/bootstrap.css'
+           rel='stylesheet')
+      script(src='/bower_components/bootstrap/dist/js/bootstrap.js')
+      script(src='/bower_components/angular/angular.js')
+      script(src='bower_components/angular-messages/angular-messages.js')
+      script(src='/public/js/board.js')
+      script(src='/public/js/app.js')
+    #+END_SRC
+
+    We are starting to accumulate script tags… More on that later.
+
+    With =angular-messages=, we can use a couple tags to group the
+    errors together and only show the one that is most important (what
+    "most" means is up to you). Though, you can configure it to show
+    more than one if you'd like.
+
+    #+BEGIN_SRC jade
+      .alert.alert-danger(ng-messages="register.email.$error")
+        p(ng-message="required") Email is required.
+        p(ng-message="email") Email must be an email address.
+    #+END_SRC
+
+    If you don't want that to show up before the user has entered
+    anything, just put it inside a =div= block with an =ng-if=
+    attribute.
+
+*** Built in validations are boring
+
+    Let's write our own! We're building it for the registration page,
+    so let's start by creating a module for that page. And, in fact,
+    while we are at it, let's re-organize the files a bit, so the
+    package and module names match up better.
+
+    - =public/js/app.js= → =public/js/tictactoe/app.js=
+    - =public/js/board.js= → =public/js/tictactoe/board.js=
+
+    Make sure to update the script tags in the header include.
+
+    Now, on to the code for our registration page. We are going to
+    write an Angular directive that will allow us to validate that the
+    username the user is entering is unique within our system.
+
+    #+BEGIN_SRC js
+      // public/js/tictactoe/registration.js
+      (function() {
+        angular.module('bewd.tictactoe.registration', ['ngMessages'])
+          .directive('uniqueUsername', function() {
+            return {
+              require: 'ngModel', // it has to be part of a tag with ng-model
+              link: function(scope, elem, attrs, ctrl) {
+                // link is called when the actual html element is created and hooked up with controllers
+
+                // We will pass the list of existing usernames to the directive
+                // as the value of the attribute
+                var existingUsernames = attrs.uniqueUsername.split(/\s*,\s*/);
+                ctrl.$validators.uniqueUsername = function(modelValue, viewValue) {
+                  // this is called when the value in the input changes
+                  // so we need to return true/false for the validity of the input
+                  return existingUsernames.indexOf(modelValue) === -1;
+                }
+              }
+            }
+          });
+      })();
+    #+END_SRC
+
+    - Add a script tag for our new JavaScript file in the header include file
+    - Add a dependency for our new =registration= module into the overall application module.
+      - Additionally, you can /remove/ the dependency on =ngMessages=
+        in the overall module. It doesn't use it and the module that
+        does lists it as a dependency.
+    - Update the registration page to make use of our awesome new directive
+
+    #+BEGIN_SRC jade
+      .form-group(ng-class="{ 'has-error': register.username.$invalid && register.username.$dirty }")
+        label.control-label Username
+        input.form-control(type="text", name="username", required, ng-model="username", unique-username="rayners,jamesBond007")
+    #+END_SRC
+
+    - Try entering one of the "existing" usernames that we passed to the directive.
+
+**** Programming Assignment
+
+     Update your application to automatically build the list of
+     usernames to pass to the =unique-username= directive.
+
+*** AJAX Time!
+
+    What is your HTML going to look like when we have 5 users in our
+    system? 50? 500? The server has all of the usernames easily
+    available. We could just ask it. First thing we need to do is
+    update the backend to be able to tell us if a given username is
+    unique/available. And it needs to respond in a way that
+    JavaScript/Angular can understand.
+
+    #+BEGIN_SRC js
+      // routes/users.js
+      var express = require('express');
+      var router = express.Router();
+
+      var User = require('../models').User;
+
+      router.get('/usernameAvailable', function(req, res) {
+        // We don't need to actually examine the existing user for a given username
+        // We only need to know if it exists or not
+        User.findOne({ where: { username: req.query.username }}).then(function(user) {
+          if (user) {
+            res.json(false);
+          } else {
+            res.json(true);
+          }
+        })
+      });
+
+      module.exports = router;
+    #+END_SRC
+
+    - What are other ways we can report that a username is or is not
+      available?
+
+    #+BEGIN_SRC js
+      // routes/users.js
+      var express = require('express');
+      var router = express.Router();
+
+      var sequelize = require('sequelize');
+      var User = require('../models').User;
+
+      router.get('/usernameAvailable', function(req, res) {
+        // We don't need to actually examine the existing user for a given username
+        // We only need to know if it exists or not
+        User.sequelize.query("SELECT 1 from 'users' where username = ?",
+                             { replacements: [ req.query.username ], type: sequelize.QueryTypes.SELECT })
+              .spread(function(userExists) {
+                  res.json(!userExists);
+              })
+      });
+
+      module.exports = router;
+    #+END_SRC
+
+    - It's both awesome and gross. It requires that the user routes
+      need to know about the internals of the user table. That sound
+      like something we should encourage?
+
+    #+BEGIN_SRC js
+      // models/user
+
+      'use strict';
+      module.exports = function(sequelize, DataTypes) {
+        var User = sequelize.define('User', {
+          username: DataTypes.STRING,
+          password: DataTypes.STRING
+        }, {
+          classMethods: {
+            associate: function(models) {
+              // associations can be defined here
+            },
+            isUsernameAvailable: function(username) {
+              return sequelize.query("SELECT 1 from 'users' where username = ?",
+                                  { replacements: [ username ], type: sequelize.QueryTypes.SELECT })
+                .spread(function(userExists) {
+                  return !userExists;
+              });
+            }
+          }
+        });
+        return User;
+      };
+    #+END_SRC
+
+    #+BEGIN_SRC js
+      // routes/users.js
+      var express = require('express');
+      var router = express.Router();
+
+      var User = require('../models').User;
+
+      router.get('/usernameAvailable', function(req, res) {
+        // We don't need to actually examine the existing user for a given username
+        // We only need to know if it exists or not
+        User.isUsernameAvailable(req.query.username).then(res.json.bind(res));
+      });
+
+      module.exports = router;
+    #+END_SRC
+
+    And to tie it into angular:
+
+    #+BEGIN_SRC js
+      // public/js/tictactoe/registration.js
+      (function() {
+        angular.module('bewd.tictactoe.registration', ['ngMessages'])
+          .directive('uniqueUsername', function($http, $q) {
+            return {
+              require: 'ngModel', // it has to be part of a tag with ng-model
+              link: function(scope, elem, attrs, ctrl) {
+                // link is called when the actual html element is created and hooked up with controllers
+
+                ctrl.$asyncValidators.uniqueUsername = function(modelValue, viewValue) {
+                  if (!modelValue) {
+                    return $q.when();
+                  }
+
+                  return $q(function(resolve, reject) {
+                    // a promise is expected
+                    $http({
+                      url: '/users/usernameAvailable',
+                      method: 'GET',
+                      params: {
+                        username: modelValue
+                      }
+                    }).then(function(response) {
+                      response.data ? resolve() : reject();
+                    });
+                  });
+                }
+              }
+            }
+          });
+      })();
+
+    #+END_SRC
+
+[fn:events] About events:
+
+  - =default= is a special event that stands for whatever event is
+    appropriate for the type of input (generally a keypress type
+    event).
+  - =blur= is the event that is triggered whenever the user/cursor
+    leaves a given input field, via clicking or tabbing.
+   
+            
+* Advanced forms
+
+   - Validation
+   - Error handling and display
+   - File uploads
+   - Pre-submit processing
+     
