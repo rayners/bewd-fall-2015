@@ -397,7 +397,137 @@
   - =blur= is the event that is triggered whenever the user/cursor
     leaves a given input field, via clicking or tabbing.
    
-            
+* Wednesday
+
+** Content negotiation
+
+   We are going to need to add more API style methods to our backend
+   code. We already have one for =usernameExists=. For starters, let's
+   look at the game routes.
+
+   If =http://localhost:3000/games/4= will display the template/page
+   for game #4, how should we get the data for it? Through the magic
+   of content negotiation, we can get it from the /same/ url!
+
+   #+BEGIN_SRC js
+     // routes/games.js
+
+     app.get('/:game_id', function(req, res) {
+       res.format({
+           html: function() {
+             res.render('individualGame');
+           },
+           json: function() {
+             res.json(req.board);
+           }
+       });
+     });
+   #+END_SRC
+
+   Browse on over to your games page [[http://localhost:3000/games]] and
+   pick a game to check out. Look at the individual game page and see
+   that it is still the HTML version.
+
+   First, we need to make a few updates to the templates. Update the
+   =individualGame.jade= file to use the new layout template. And you
+   can also remove the outer container =div= from the Angular template
+   for the board directive.
+
+   Back to the game page, we've fixed it up to fall in-line with the
+   rest of our styling. And if we request it again with curl, we'll
+   see the same thing.
+
+   #+BEGIN_SRC shell
+     ~/Code/tictactoe (git)-[master]U % curl -i http://localhost:3000/games/5
+     HTTP/1.1 200 OK
+     X-Powered-By: Express
+     Vary: Accept
+     Content-Type: text/html; charset=utf-8
+     Content-Length: 901
+     ETag: W/"385-uLcPZd6KTFoSrm0W6Kwghg"
+     set-cookie: connect.sid=s%3A3SVvBnKQWMzrGmT4PCTG5pWlnWWPPUEV.Ypr1yKsvKqH%2FHKsM5%2FGXi9yZFTZA1Q0yj4WuC%2Bmohdo; Path=/; HttpOnly
+     Date: Wed, 07 Oct 2015 01:50:21 GMT
+     Connection: keep-alive
+
+     <!DOCTYPE html><html ng-app="bewd.tictactoe"><head><script src="/bower_components/jquery/dist/jquery.js"></script><link href="/bower_components/bootstrap/dist/css/bootstrap.css" rel="stylesheet"><script src="/bower_components/bootstrap/dist/js/bootstrap.js"></script><script src="/bower_components/angular/angular.js"></script><script src="/bower_components/angular-messages/angular-messages.js"></script><script src="/public/js/tictactoe/app.js"></script><script src="/public/js/tictactoe/board.js"></script><script src="/public/js/tictactoe/registration.js"></script><title>Game #5</title></head><body><div class="container"></div><div class="container"><div class="well"><h1>Game #5</h1><tic-tac-toe-board the-board="[[&quot;O&quot;,&quot;O&quot;,&quot;O&quot;],[&quot;X&quot;,&quot;X&quot;,&quot;X&quot;],[&quot;O&quot;,&quot;O&quot;,&quot;P&quot;]]"></tic-tac-toe-board></div></div></body></html>
+   #+END_SRC
+
+   /But/, if we request it again with the header that gets sent with
+   normal AJAX-style web requests, we'll get something different in
+   return.
+
+   #+BEGIN_SRC shell
+     ~/Code/tictactoe (git)-[master]U % curl -i -H 'Accept: application/json' http://localhost:3000/games/5
+     HTTP/1.1 200 OK
+     X-Powered-By: Express
+     Vary: Accept
+     Content-Type: application/json; charset=utf-8
+     Content-Length: 138
+     ETag: W/"8a-HOtWFehO4hR1xFNdFu0R8Q"
+     set-cookie: connect.sid=s%3A5nBKfapu4AHgyBTQBUe-FWd2VeaBOlr5.RcKApfkay3Up%2BFlE%2BmlcsuSebSdrDeDhMquBINTljmU; Path=/; HttpOnly
+     Date: Wed, 07 Oct 2015 01:54:12 GMT
+     Connection: keep-alive
+
+     {"board":[["O","O","O"],["X","X","X"],["O","O","P"]],"id":5,"createdAt":"2015-09-21T02:10:35.609Z","updatedAt":"2015-09-21T02:10:35.609Z"}
+   #+END_SRC
+
+   Something looks different here…
+
+   It's good that we can perform a JSON request from the command line,
+   but it would be really handy if we could do it from the browser
+   directly too (manual testing, or whatever else comes up).
+
+   We can do one better. We can fake an optional file extension to the
+   urls to allow us to ask for JSON instead of HTML just by changing
+   the url being requested.
+
+   #+BEGIN_SRC js
+     // routes/games.js
+
+     app.get('/:game_id.:format?', function(req, res) {
+       if (req.params.format && req.params.format === 'json') {
+         req.headers.accept = 'application/json';
+       }
+       res.format({
+           html: function() {
+             res.render('individualGame');
+           },
+           json: function() {
+             res.json(req.board);
+           }
+       });
+     });
+
+   #+END_SRC
+
+   This seems useful enough to extract for the entire application! Let's do that.
+
+   #+BEGIN_SRC js
+     // routes.js
+
+     var accepts = {
+       'json': 'application/json',
+       'html': 'text/html'
+     };
+     app.param('format', function(req, res, next, param) {
+       req.headers.accept = accepts[param];
+       next();
+     });
+
+   #+END_SRC
+
+   Try it again!
+
+   Wait a minite! What's going on?
+
+   It's a limitation in how express works and how we have our
+   application code organized. So just move the code back to
+   =routes/games.js= for now.
+
+   #+BEGIN_SRC js
+   
+   #+END_SRC
+
 * Advanced forms
 
    - Validation
