@@ -1,0 +1,233 @@
+#+OPTIONS: toc:nil
+
+* Monday
+
+** Followups
+
+*** Jade vs Angular
+
+Jade builds all the templates. When should you use Angular?
+
+Use Angular when the page needs to be more dynamic, especially if it
+needs to talk to the backend server without doing any page reloading.
+
+For example, the games list page reloads the game list periodically;
+that needs Angular. A user profile page? Do you expect the user to
+change their username or email address (or some other field) often
+enough that the page needs to poll the backend for changes? Probably
+not. That means you only need to do things in Jade.
+
+*** Git!
+
+We've already gone over creating a new git repository, pulling from an
+existing one, making commits to your own, and pushing from a local
+repository to a remote one (GitHub). What else can git do?
+
+Short answer: a metric /crap-ton/
+
+- =git diff= :: show you what has changed since your last commit
+- =git checkout .= :: revert your working directory (your workspace in
+     the repository) to the state of your last commit (other than
+     files that haven't been add to the repository yet)
+- =git stash= :: Add your current working directory changes (again,
+     only for files that git already knows about) to a "stash" (kind
+     of like a shelf, the changes are saved and put aside, files are
+     reverted like =git checkout .=)
+- =git stash pop= :: Remove the most recent set of changes from the
+     stash and apply them to the working directory
+- =git commit --amend ...= :: Add the currently staged changes to the
+     most recent commit
+- =git reset --soft HEAD~1= :: Undo the latest commit, but keep all
+     the changes (=--soft=) in the working directory. I find this one
+     so useful, I created a =git= alias for it (=git oops=).
+- =.git/hooks/...= :: Scripts that can be written to automatically run
+     during certain parts of the git process. For example, I wrote one
+     that looks for differences in the =bower.json= file whenever
+     switching branches, and then runs =bower install= to make sure
+     new/changed packages are installed.
+
+** MVC
+
+Model-View-Controller!
+
+The User of the system speaks to the Controller. The Controller takes
+those instructures from the User and uses the methods in the Model(s)
+to change the state of the system. The Model(s) then inform the View(s)
+which display the system state information to the User.
+
+** Associating boards and users
+
+Here's where things start getting interesting. We're going to add
+players to the boards so we can have honest-to-goodness multiplayer
+games of Tic Tac Toe going on.
+
+First, let's add the associations between boards and users to their
+models.
+
+#+BEGIN_SRC js
+// models/user.js
+'use strict';
+module.exports = function(sequelize, DataTypes) {
+  var User = sequelize.define('User', {
+    username: DataTypes.STRING,
+    password: DataTypes.STRING
+  }, {
+    classMethods: {
+      associate: function(models) {
+        User.hasMany(models.Board, { as: 'XPlayer', foreignKey: 'xPlayerId' });
+        User.hasMany(models.Board, { as: 'OPlayer', foreignKey: 'oPlayerId' });
+      }
+    }
+  });
+  return User;
+};
+#+END_SRC
+
+#+BEGIN_SRC js
+// models/board.js
+'use strict';
+
+module.exports = function(sequelize, DataTypes) {
+  var Board = sequelize.define('Board', {
+      board: {
+          type: DataTypes.STRING,
+          get: function() {
+              return this.getDataValue('board')
+                .match(/.{3}/g)
+                .map(function(row) {
+                  return row.split('');
+                });
+          },
+          validate: {
+              len: 9,
+              is: {
+                args: /^[XO ]+$/,
+                msg: 'Must be a valid tic tac toe board'
+              }
+          }
+          // set: function(boardArray) {
+          //     this.setDataValue(boardArray.map(function(row) { return row.join(''); } ).join(''));
+          // }
+      }
+  },
+  {
+    classMethods: {
+      associate: function(models) {
+        Board.belongsTo(models.User, { as: 'XPlayer', foreignKey: 'xPlayerId' });
+        Board.belongsTo(models.User, { as: 'OPlayer', foreignKey: 'oPlayerId' });
+      }
+    }
+  });
+  return Board;
+};
+
+#+END_SRC
+
+Now we need to create the migration to add the columns we need to
+associate them.
+
+#+BEGIN_SRC js
+// migrations/XXXXXXXXXXXXXX-AddPlayersToBoards.js
+'use strict';
+
+module.exports = {
+  up: function (queryInterface, Sequelize) {
+    queryInterface.addColumn('Boards', 'xPlayerId', Sequelize.INTEGER);
+    queryInterface.addColumn('Boards', 'oPlayerId', Sequelize.INTEGER);
+  },
+
+  down: function (queryInterface, Sequelize) {
+    queryInterface.removeColumn('Boards', 'xPlayerId');
+    queryInterface.removeColumn('Boards', 'oPlayerId');
+  }
+};
+#+END_SRC
+
+Now, to get to the users for a game
+
+#+BEGIN_SRC js
+  var models = require('./models');
+  models.Board.findById(1).then(function(board) {
+          board.getXPlayer().then(function(xp) {
+              console.log('X player', xp.username);
+          });
+          board.getOPlayer().then(function(op) {
+              console.log('O player', op.username);
+          });
+      });
+#+END_SRC
+
+Less then efficient/useful, eh? We can do better!
+
+#+BEGIN_SRC js
+  var models = require('./models');
+  models.Board.findById(1,
+                        { include:
+                          [
+                              { model: models.User, as: 'XPlayer' },
+                              { model: models.User, as: 'OPlayer' }
+                          ]
+                        }).then(function(board) {
+                            console.log('X Player', board.XPlayer.username);
+                            console.log('O Player', board.OPlayer.username);
+                        });
+#+END_SRC
+
+Seems good enough. We can just drop that into our route handlers,
+right? It only has to know about other models and database
+structures. There is a solution for this. Most ORMs have a concept of
+"scope" that allows us to expose a set of meaningful database
+parameters with a simple name.
+
+#+BEGIN_SRC js
+// models/board.js
+
+// ...
+    scopes: {
+      withUsers: function() {
+        return {
+          include: [
+            { association: Board.associations.XPlayer },
+            { association: Board.associations.OPlayer }
+          ]
+        };
+      }
+    }
+// ...
+
+#+END_SRC
+
+How do we associate a user with a board? We could set the X or O
+player ids directy, but again that would require that we know probably
+too much about how the database stories its information.
+
+#+BEGIN_SRC js
+boardObj.setXPlayer(userObj);
+userObj.addXPlayer(boardObj);
+#+END_SRC
+
+And how do we find a board that a user can join?
+
+#+BEGIN_SRC js
+// models/board.js
+      available: {
+        where: {
+          $or: [
+            { xPlayerId: null },
+            { oPlayerId: null }
+          ]
+        }
+      },
+#+END_SRC
+
+** Programming project!
+
+Build a page where a user can look for a game to join, and give them
+the option to join that game as the X or the O player.
+
+* MVC
+
+   - Architecture overview
+   - Separation of concerns
+   - Component roles
+
