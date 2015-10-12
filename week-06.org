@@ -202,7 +202,9 @@ player ids directy, but again that would require that we know probably
 too much about how the database stories its information.
 
 #+BEGIN_SRC js
+// Based on the board object
 boardObj.setXPlayer(userObj);
+// Or based on the user object
 userObj.addXPlayer(boardObj);
 #+END_SRC
 
