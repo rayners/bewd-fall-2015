@@ -1,0 +1,492 @@
+* Monday
+** Heroku
+   - Sign up for an account on heroku
+   - Install the [[https://toolbelt.heroku.com][Heroku Toolbelt]]
+   - =heroku login=
+     #+BEGIN_SRC shell
+       ~/Code/tictactoe (git)-[master] % heroku login
+       Enter your Heroku credentials.
+       Email: rayners@gmail.com
+       Password (typing will be hidden):
+       Logged in as rayners@gmail.com
+     #+END_SRC
+   - =heroku create=
+     #+BEGIN_SRC shell
+       ~/Code/tictactoe (git)-[master] % heroku create
+       Creating morning-crag-3336... done, stack is cedar-14
+       https://morning-crag-3336.herokuapp.com/ | https://git.heroku.com/morning-crag-3336.git
+       Git remote heroku added
+     #+END_SRC
+   - =git push heroku master=
+     #+BEGIN_SRC shell
+       ~/Code/tictactoe (git)-[master] % git push heroku master
+       Counting objects: 214, done.
+       Delta compression using up to 8 threads.
+       Compressing objects: 100% (197/197), done.
+       Writing objects: 100% (214/214), 25.61 KiB | 0 bytes/s, done.
+       Total 214 (delta 99), reused 0 (delta 0)
+       remote: Compressing source files... done.
+       remote: Building source:
+       remote:
+       remote: -----> Node.js app detected
+       remote:
+       remote: -----> Creating runtime environment
+       remote:
+       remote:        NPM_CONFIG_LOGLEVEL=error
+       remote:        NPM_CONFIG_PRODUCTION=true
+       remote:        NODE_ENV=production
+       remote:        NODE_MODULES_CACHE=true
+       remote:
+       remote: -----> Installing binaries
+       remote:        engines.node (package.json):  unspecified
+       remote:        engines.npm (package.json):   unspecified (use default)
+       remote:
+       remote:        Resolving node version (latest stable) via semver.io...
+       remote:        Downloading and installing node 4.2.1...
+       remote:        Using default npm version: 2.14.7
+       remote:
+       remote: -----> Restoring cache
+       remote:        Skipping cache restore (new runtime signature)
+       remote:
+       remote: -----> Building dependencies
+       remote:        Pruning any extraneous modules
+       remote:        Installing node modules (package.json)
+       remote:
+       remote:        > sqlite3@3.1.0 install /tmp/build_4c809d4d943292194ce90d69f4101484/node_modules/sqlite3
+       remote:        > node-pre-gyp install --fallback-to-build
+       remote:
+       remote:        [sqlite3] Success: "/tmp/build_4c809d4d943292194ce90d69f4101484/node_modules/sqlite3/lib/binding/node-v46-linux-x64/node_sqlite3.node" is installed via remote
+       remote:        flash@1.1.0 node_modules/flash
+       remote:
+       remote:        cookie-parser@1.4.0 node_modules/cookie-parser
+       remote:        ├── cookie-signature@1.0.6
+       remote:        └── cookie@0.2.2
+       remote:
+       remote:        connect-session-sequelize@2.3.1 node_modules/connect-session-sequelize
+       remote:        └── debug@2.2.0 (ms@0.7.1)
+       remote:
+       remote:        morgan@1.6.1 node_modules/morgan
+       remote:        ├── on-headers@1.0.1
+       remote:        ├── basic-auth@1.0.3
+       remote:        ├── depd@1.0.1
+       remote:        ├── on-finished@2.3.0 (ee-first@1.1.1)
+       remote:        └── debug@2.2.0 (ms@0.7.1)
+       remote:
+       remote:        express-session@1.11.3 node_modules/express-session
+       remote:        ├── cookie@0.1.3
+       remote:        ├── utils-merge@1.0.0
+       remote:        ├── cookie-signature@1.0.6
+       remote:        ├── on-headers@1.0.1
+       remote:        ├── parseurl@1.3.0
+       remote:        ├── depd@1.0.1
+       remote:        ├── crc@3.3.0
+       remote:        ├── uid-safe@2.0.0 (base64-url@1.2.1)
+       remote:        └── debug@2.2.0 (ms@0.7.1)
+       remote:
+       remote:        express@4.13.3 node_modules/express
+       remote:        ├── cookie@0.1.3
+       remote:        ├── cookie-signature@1.0.6
+       remote:        ├── escape-html@1.0.2
+       remote:        ├── merge-descriptors@1.0.0
+       remote:        ├── array-flatten@1.1.1
+       remote:        ├── utils-merge@1.0.0
+       remote:        ├── content-type@1.0.1
+       remote:        ├── vary@1.0.1
+       remote:        ├── fresh@0.3.0
+       remote:        ├── range-parser@1.0.2
+       remote:        ├── path-to-regexp@0.1.7
+       remote:        ├── methods@1.1.1
+       remote:        ├── etag@1.7.0
+       remote:        ├── content-disposition@0.5.0
+       remote:        ├── serve-static@1.10.0
+       remote:        ├── parseurl@1.3.0
+       remote:        ├── depd@1.0.1
+       remote:        ├── qs@4.0.0
+       remote:        ├── on-finished@2.3.0 (ee-first@1.1.1)
+       remote:        ├── finalhandler@0.4.0 (unpipe@1.0.0)
+       remote:        ├── debug@2.2.0 (ms@0.7.1)
+       remote:        ├── proxy-addr@1.0.8 (forwarded@0.1.0, ipaddr.js@1.0.1)
+       remote:        ├── send@0.13.0 (destroy@1.0.3, statuses@1.2.1, ms@0.7.1, mime@1.3.4, http-errors@1.3.1)
+       remote:        ├── type-is@1.6.9 (media-typer@0.3.0, mime-types@2.1.7)
+       remote:        └── accepts@1.2.13 (negotiator@0.5.3, mime-types@2.1.7)
+       remote:
+       remote:        body-parser@1.14.1 node_modules/body-parser
+       remote:        ├── bytes@2.1.0
+       remote:        ├── content-type@1.0.1
+       remote:        ├── depd@1.1.0
+       remote:        ├── qs@5.1.0
+       remote:        ├── on-finished@2.3.0 (ee-first@1.1.1)
+       remote:        ├── raw-body@2.1.4 (unpipe@1.0.0)
+       remote:        ├── debug@2.2.0 (ms@0.7.1)
+       remote:        ├── http-errors@1.3.1 (statuses@1.2.1, inherits@2.0.1)
+       remote:        ├── iconv-lite@0.4.12
+       remote:        └── type-is@1.6.9 (media-typer@0.3.0, mime-types@2.1.7)
+       remote:
+       remote:        jade@1.11.0 node_modules/jade
+       remote:        ├── commander@2.6.0
+       remote:        ├── character-parser@1.2.1
+       remote:        ├── void-elements@2.0.1
+       remote:        ├── mkdirp@0.5.1 (minimist@0.0.8)
+       remote:        ├── jstransformer@0.0.2 (is-promise@2.1.0, promise@6.1.0)
+       remote:        ├── constantinople@3.0.2 (acorn@2.4.0)
+       remote:        ├── uglify-js@2.5.0 (async@0.2.10, uglify-to-browserify@1.0.2, source-map@0.5.1, yargs@3.5.4)
+       remote:        ├── with@4.0.3 (acorn@1.2.2, acorn-globals@1.0.6)
+       remote:        ├── clean-css@3.4.6 (commander@2.8.1, source-map@0.4.4)
+       remote:        └── transformers@2.1.0 (promise@2.0.0, css@1.0.8, uglify-js@2.2.5)
+       remote:
+       remote:        sequelize@3.12.1 node_modules/sequelize
+       remote:        ├── shimmer@1.0.0
+       remote:        ├── inflection@1.7.2
+       remote:        ├── depd@1.1.0
+       remote:        ├── generic-pool@2.2.0
+       remote:        ├── dottie@1.0.0
+       remote:        ├── toposort-class@1.0.1
+       remote:        ├── semver@5.0.3
+       remote:        ├── validator@4.1.0
+       remote:        ├── node-uuid@1.4.3
+       remote:        ├── wkx@0.1.0
+       remote:        ├── bluebird@2.10.2
+       remote:        ├── moment-timezone@0.4.1
+       remote:        ├── wellknown@0.4.0 (minimist@1.1.3, concat-stream@1.5.0)
+       remote:        └── moment@2.10.6
+       remote:
+       remote:        express-debug@1.1.1 node_modules/express-debug
+       remote:        ├── xtend@2.0.3
+       remote:        ├── connectr@0.0.6 (debug@0.7.4)
+       remote:        └── jade@0.29.0 (character-parser@1.0.2, commander@0.6.1, mkdirp@0.3.5, transformers@1.8.3, monocle@0.1.50)
+       remote:
+       remote:        lodash@3.10.1 node_modules/lodash
+       remote:
+       remote:        sequelize-cli@1.9.2 node_modules/sequelize-cli
+       remote:        ├── yargs@1.3.3
+       remote:        ├── bluebird@2.10.2
+       remote:        ├── umzug@1.6.0 (redefine@0.2.1)
+       remote:        ├── resolve@1.1.6
+       remote:        ├── findup-sync@0.2.1 (glob@4.3.5)
+       remote:        ├── fs-extra@0.16.5 (jsonfile@2.2.3, graceful-fs@3.0.8, rimraf@2.4.3)
+       remote:        ├── js-beautify@1.5.10 (nopt@3.0.4, config-chain@1.1.9, mkdirp@0.5.1)
+       remote:        ├── moment@2.10.6
+       remote:        ├── gulp-help@1.3.4 (gulp-util@3.0.6)
+       remote:        ├── gulp@3.9.0 (interpret@0.6.6, pretty-hrtime@1.0.1, deprecated@0.0.1, archy@1.0.0, minimist@1.2.0, semver@4.3.6, tildify@1.1.2, v8flags@2.0.10, chalk@1.1.1, orchestrator@0.3.7, liftoff@2.2.0, vinyl-fs@0.3.14, gulp-util@3.0.6)
+       remote:        └── cli-color@0.3.3 (d@0.1.1, timers-ext@0.1.0, memoizee@0.3.9, es5-ext@0.10.8)
+       remote:
+       remote:        eslint@1.7.1 node_modules/eslint
+       remote:        ├── escape-string-regexp@1.0.3
+       remote:        ├── path-is-absolute@1.0.0
+       remote:        ├── object-assign@2.1.1
+       remote:        ├── path-is-inside@1.0.1
+       remote:        ├── user-home@1.1.1
+       remote:        ├── globals@8.11.0
+       remote:        ├── xml-escape@1.0.0
+       remote:        ├── estraverse@4.1.1
+       remote:        ├── strip-json-comments@1.0.4
+       remote:        ├── esutils@2.0.2
+       remote:        ├── estraverse-fb@1.3.1
+       remote:        ├── text-table@0.2.0
+       remote:        ├── to-single-quotes@1.0.4 (get-stdin@3.0.2)
+       remote:        ├── to-double-quotes@1.0.2 (get-stdin@3.0.2)
+       remote:        ├── espree@2.2.5
+       remote:        ├── is-resolvable@1.0.0 (tryit@1.0.1)
+       remote:        ├── debug@2.2.0 (ms@0.7.1)
+       remote:        ├── chalk@1.1.1 (supports-color@2.0.0, ansi-styles@2.1.0, strip-ansi@3.0.0, has-ansi@2.0.0)
+       remote:        ├── doctrine@0.7.0 (isarray@0.0.1, esutils@1.1.6)
+       remote:        ├── glob@5.0.15 (inherits@2.0.1, once@1.3.2, inflight@1.0.4)
+       remote:        ├── optionator@0.5.0 (fast-levenshtein@1.0.7, type-check@0.3.1, wordwrap@0.0.3, levn@0.2.5, deep-is@0.1.3, prelude-ls@1.1.2)
+       remote:        ├── minimatch@2.0.10 (brace-expansion@1.1.1)
+       remote:        ├── json-stable-stringify@1.0.0 (jsonify@0.0.0)
+       remote:        ├── shelljs@0.3.0
+       remote:        ├── lodash.merge@3.3.2 (lodash.keys@3.1.2, lodash._getnative@3.9.1, lodash.isarguments@3.0.4, lodash.isarray@3.0.4, lodash._arrayeach@3.0.0, lodash._arraycopy@3.0.0, lodash.istypedarray@3.0.2, lodash.keysin@3.0.8, lodash.toplainobject@3.0.0, lodash._createassigner@3.1.1, lodash.isplainobject@3.2.0)
+       remote:        ├── concat-stream@1.5.0 (inherits@2.0.1, typedarray@0.0.6, readable-stream@2.0.2)
+       remote:        ├── mkdirp@0.5.1 (minimist@0.0.8)
+       remote:        ├── lodash.clonedeep@3.0.2 (lodash._bindcallback@3.0.1, lodash._baseclone@3.3.0)
+       remote:        ├── lodash.omit@3.1.0 (lodash.restparam@3.6.1, lodash._bindcallback@3.0.1, lodash._pickbyarray@3.0.2, lodash._arraymap@3.0.0, lodash._baseflatten@3.1.4, lodash.keysin@3.0.8, lodash._pickbycallback@3.0.0, lodash._basedifference@3.0.3)
+       remote:        ├── inquirer@0.9.0 (ansi-regex@2.0.0, strip-ansi@3.0.0, figures@1.4.0, cli-width@1.1.0, rx-lite@2.5.2, through@2.3.8, run-async@0.1.0, readline2@0.1.1)
+       remote:        ├── is-my-json-valid@2.12.2 (jsonpointer@2.0.0, generate-function@2.0.0, xtend@4.0.0, generate-object-property@1.2.0)
+       remote:        ├── file-entry-cache@1.2.4 (object-assign@4.0.1, flat-cache@1.0.9)
+       remote:        ├── js-yaml@3.4.3 (esprima@2.6.0, argparse@1.0.2)
+       remote:        ├── handlebars@4.0.3 (async@1.4.2, source-map@0.4.4, optimist@0.6.1, uglify-js@2.4.24)
+       remote:        └── escope@3.2.0 (esrecurse@3.1.1, estraverse@3.1.0, es6-map@0.1.2, es6-weak-map@0.1.4)
+       remote:
+       remote:        sqlite3@3.1.0 node_modules/sqlite3
+       remote:        └── nan@2.0.9
+       remote:
+       remote:        bower@1.6.3 node_modules/bower
+       remote:
+       remote: -----> Caching build
+       remote:        Clearing previous node cache
+       remote:        Saving 2 cacheDirectories (default):
+       remote:        - node_modules
+       remote:        - bower_components (nothing to cache)
+       remote:
+       remote: -----> Build succeeded!
+       remote:        ├── body-parser@1.14.1
+       remote:        ├── bower@1.6.3
+       remote:        ├── connect-session-sequelize@2.3.1
+       remote:        ├── cookie-parser@1.4.0
+       remote:        ├── eslint@1.7.1
+       remote:        ├── express@4.13.3
+       remote:        ├── express-debug@1.1.1
+       remote:        ├── express-session@1.11.3
+       remote:        ├── flash@1.1.0
+       remote:        ├── jade@1.11.0
+       remote:        ├── lodash@3.10.1
+       remote:        ├── morgan@1.6.1
+       remote:        ├── sequelize@3.12.1
+       remote:        ├── sequelize-cli@1.9.2
+       remote:        └── sqlite3@3.1.0
+       remote:
+       remote: -----> Discovering process types
+       remote:        Procfile declares types   -> (none)
+       remote:        Default types for Node.js -> web
+       remote:
+       remote: -----> Compressing... done, 26.0MB
+       remote: -----> Launching... done, v3
+       remote:        https://morning-crag-3336.herokuapp.com/ deployed to Heroku
+       remote:
+       remote: Verifying deploy... done.
+       To https://git.heroku.com/morning-crag-3336.git
+        ,* [new branch]      master -> master
+     #+END_SRC
+   - =heroku open=
+     #+BEGIN_SRC shell
+       ~/Code/tictactoe (git)-[master] % heroku open
+       Opening morning-crag-3336... done
+     #+END_SRC
+   - Didn't work? Look at the logs! =heroku logs --tail=
+     #+BEGIN_SRC shell
+       ~/Code/tictactoe (git)-[master] % heroku logs --tail
+       2015-10-18T21:04:31.094100+00:00 heroku[api]: Enable Logplex by rayners@gmail.com
+       2015-10-18T21:04:31.094100+00:00 heroku[api]: Release v2 created by rayners@gmail.com
+       2015-10-18T21:06:55.798046+00:00 heroku[slug-compiler]: Slug compilation started
+       2015-10-18T21:06:55.798056+00:00 heroku[slug-compiler]: Slug compilation finished
+       2015-10-18T21:06:55.673438+00:00 heroku[api]: Scale to web=1 by rayners@gmail.com
+       2015-10-18T21:06:55.733276+00:00 heroku[api]: Deploy 475bc1e by rayners@gmail.com
+       2015-10-18T21:06:55.733276+00:00 heroku[api]: Release v3 created by rayners@gmail.com
+       2015-10-18T21:06:57.978473+00:00 heroku[web.1]: Starting process with command `npm start`
+       2015-10-18T21:06:59.813691+00:00 app[web.1]: npm ERR! argv "/app/.heroku/node/bin/node" "/app/.heroku/node/bin/npm" "start"
+       2015-10-18T21:06:59.813942+00:00 app[web.1]: npm ERR! node v4.2.1
+       2015-10-18T21:06:59.815652+00:00 app[web.1]:
+       2015-10-18T21:06:59.814310+00:00 app[web.1]: npm ERR! npm  v2.14.7
+       2015-10-18T21:06:59.822235+00:00 app[web.1]: npm ERR! Please include the following file with any support request:
+       2015-10-18T21:06:59.822355+00:00 app[web.1]: npm ERR!     /app/npm-debug.log
+       2015-10-18T21:06:59.813187+00:00 app[web.1]: npm ERR! Linux 3.13.0-63-generic
+       2015-10-18T21:06:59.816060+00:00 app[web.1]: npm ERR! missing script: start
+       2015-10-18T21:06:59.816441+00:00 app[web.1]: npm ERR! If you need help, you may report this error at:
+       2015-10-18T21:06:59.816288+00:00 app[web.1]: npm ERR!
+       2015-10-18T21:06:59.816596+00:00 app[web.1]: npm ERR!     <https://github.com/npm/npm/issues>
+       2015-10-18T21:06:59.821986+00:00 app[web.1]:
+       2015-10-18T21:07:00.408699+00:00 heroku[web.1]: Process exited with status 1
+       2015-10-18T21:07:00.424550+00:00 heroku[web.1]: State changed from starting to crashed
+       2015-10-18T21:07:00.425530+00:00 heroku[web.1]: State changed from crashed to starting
+       2015-10-18T21:07:03.636754+00:00 heroku[web.1]: Starting process with command `npm start`
+       2015-10-18T21:07:06.817090+00:00 app[web.1]: npm ERR! argv "/app/.heroku/node/bin/node" "/app/.heroku/node/bin/npm" "start"
+       2015-10-18T21:07:06.817459+00:00 app[web.1]: npm ERR! node v4.2.1
+       2015-10-18T21:07:06.818542+00:00 app[web.1]: npm ERR! npm  v2.14.7
+       2015-10-18T21:07:06.816225+00:00 app[web.1]: npm ERR! Linux 3.13.0-63-generic
+       2015-10-18T21:07:06.820268+00:00 app[web.1]:
+       2015-10-18T21:07:06.820535+00:00 app[web.1]: npm ERR! missing script: start
+       2015-10-18T21:07:06.821171+00:00 app[web.1]: npm ERR!
+       2015-10-18T21:07:06.821353+00:00 app[web.1]: npm ERR! If you need help, you may report this error at:
+       2015-10-18T21:07:06.821542+00:00 app[web.1]: npm ERR!     <https://github.com/npm/npm/issues>
+       2015-10-18T21:07:06.830894+00:00 app[web.1]:
+       2015-10-18T21:07:06.831156+00:00 app[web.1]: npm ERR! Please include the following file with any support request:
+       2015-10-18T21:07:06.831320+00:00 app[web.1]: npm ERR!     /app/npm-debug.log
+       2015-10-18T21:07:07.813713+00:00 heroku[web.1]: State changed from starting to crashed
+       2015-10-18T21:07:07.799160+00:00 heroku[web.1]: Process exited with status 1
+       2015-10-18T21:10:22.274122+00:00 heroku[router]: at=error code=H10 desc="App crashed" method=GET path="/" host=morning-crag-3336.herokuapp.com request_id=cac41b9a-2439-4edb-9f4c-1a4ad9169035 fwd="64.236.208.26" dyno= connect= service= status=503 bytes=
+       2015-10-18T21:10:22.818262+00:00 heroku[router]: at=error code=H10 desc="App crashed" method=GET path="/favicon.ico" host=morning-crag-3336.herokuapp.com request_id=06fc2024-4000-43b7-87e6-e19747ec2689 fwd="64.236.208.26" dyno= connect= service= status=503 bytes=
+     #+END_SRC
+   - Add a =start= script to =package.json=
+     #+BEGIN_SRC shell
+       ~/Code/tictactoe (git)-[master]U % git diff
+       diff --git a/package.json b/package.json
+       index 5069bb9..5ecbfe4 100644
+       --- a/package.json
+       +++ b/package.json
+       @@ -4,6 +4,7 @@
+          "description": "Tic Tac Toe Web!",
+          "main": "index.js",
+          "scripts": {
+       +    "start": "node index.js",
+            "test": "echo \"Error: no test specified\" && exit 1"
+          },
+          "author": "",
+     #+END_SRC
+   - Closer!
+     #+BEGIN_SRC shell
+       2015-10-18T21:14:57.619620+00:00 app[web.1]:
+       2015-10-18T21:14:57.619632+00:00 app[web.1]: > tictactoe@1.0.0 start /app
+       2015-10-18T21:14:57.619633+00:00 app[web.1]: > node index.js
+       2015-10-18T21:14:57.619634+00:00 app[web.1]:
+       2015-10-18T21:14:58.358729+00:00 app[web.1]: Example app listening at http://:::3000
+       2015-10-18T21:14:58.374472+00:00 app[web.1]: Unhandled rejection SequelizeConnectionError: SQLITE_CANTOPEN: unable to open database file
+       2015-10-18T21:14:58.374476+00:00 app[web.1]:     at Database.<anonymous> (/app/node_modules/sequelize/lib/dialects/sqlite/connection-manager.js:46:61)
+       2015-10-18T21:15:54.916481+00:00 heroku[web.1]: Error R10 (Boot timeout) -> Web process failed to bind to $PORT within 60 seconds of launch
+       2015-10-18T21:15:54.916481+00:00 heroku[web.1]: Stopping process with SIGKILL
+       2015-10-18T21:15:54.939684+00:00 app[web.1]: Error waiting for process to terminate: No child processes
+       2015-10-18T21:15:55.599844+00:00 heroku[web.1]: Process exited with status 22
+       2015-10-18T21:15:55.616698+00:00 heroku[web.1]: State changed from starting to crashed
+     #+END_SRC
+   - Need to make some other changes to integrate with Heroku's setup.
+   - Use the port Heroku is telling us to use
+     #+BEGIN_SRC js
+     // index.js
+     app.set('port', process.env.PORT || 3000);
+
+     // ...
+
+     var server = app.listen(app.get('port'), // ...
+     #+END_SRC
+   - Commit, push, and refresh!
+   - Still some errors, and no angular or bootstrap, but it loads!
+   - Next, making it install the bower components
+   - Add a =postinstall= script to =package.json=
+     #+BEGIN_SRC json
+       "scripts": {
+         "start": "node index.js",
+         "postinstall": "./node_modules/.bin/bower install",
+         "test": "echo \"Error: no test specified\" && exit 1"
+       }
+     #+END_SRC
+   - Add redis to our heroku setup: =heroku addons:create heroku-redis:hobby-dev=
+   - Install the =connect-redis= module from NPM (=npm install --save ...=)
+   - Update =index.js= to use it if available:
+     #+BEGIN_SRC js
+       // index.js
+       app.use(cookieParser());
+       if (process.env.REDIS_URL) {
+         var RedisStore = require('connect-redis')(session);
+
+         app.use(session({
+           store: new RedisStore({ url: process.env.REDIS_URL }),
+           secret: 'I see undead people',
+           saveUninitialized: false,
+           resave: false
+         }));
+       } else {
+         var Sequelize = require('sequelize');
+         var SequelizeStore = require('connect-session-sequelize')(session.Store);
+
+         var sequelize = new Sequelize(
+           "database",
+           "username",
+           "password", {
+             "dialect": "sqlite",
+             "storage": "./store/session.sqlite"
+           });
+
+         var store = new SequelizeStore({ db: sequelize });
+         store.sync();
+         app.use(session({
+           saveUninitialized: false,
+           resave: false,
+           secret: 'I see dead people',
+           store: store
+         }));
+       }
+     #+END_SRC
+   - Trying viewing your =/games= url. Not quite there yet. We're going to need to get setup with Postgresql.
+     - =heroku addons:create heroku-postgresql:hobby-dev=
+     - Install =pg= and =pg-hstore= npm modules (technically, you
+       don't /need/ to install them, just add them to the dependencies
+       list in your =package.json= file)
+     - Update the =config/config.json= file
+       #+BEGIN_SRC json
+         "production": {
+             "use_env_variable": "DATABASE_URL"
+         }
+       #+END_SRC
+     - And make sure to put database migration into the =postinstall= script
+       #+BEGIN_SRC json
+         "scripts": {
+           "start": "node index.js",
+           "postinstall": "./node_modules/.bin/bower install && ./node_modules/.bin/sequelize --env production db:migrate",
+           "test": "echo \"Error: no test specified\" && exit 1"
+         },
+       #+END_SRC
+     - Due to some differences between sqlite and postgress, we need
+       to lowercase all the model and table names, including in the
+       migrations
+     - Commit and push to heroku
+   - Now, post your app's url to slack and everybody go sign up for everybody else's tic tac toe service.
+** Authorization vs Authentication
+   A bunch of jerks have just signed up for your app, and you need to
+   manage them. There are a few requirements for that:
+     - You don't want to do it in the database directly. That's just asking for trouble.
+     - You don't want to give them access to the admin tools.
+
+   Enter authorization. There are many options available to do it, or
+   we could roll our own completely. But we're going to use
+   =connect-roles=.
+
+     - Install the =connect-roles= module.
+     - Create a =roles.js= file, which we are going to use to build
+       out all of our potential roles
+       #+BEGIN_SRC js
+         // roles.js
+
+         var ConnectRoles = require('connect-roles');
+
+         var roles = new ConnectRoles();
+
+         roles.use('access admin page', function(req) {
+           // rayners is the admin
+           return req.currentUser && req.currentUser.username === 'rayners';
+         });
+
+         module.exports = roles;
+       #+END_SRC
+     - Hook it into our app
+       #+BEGIN_SRC js
+         // routes.js
+         app.use(function(req, res, next) {
+           req.isAuthenticated = function() {
+             return !!req.currentUser;
+           };
+           if (req.session.user_id) {
+             models.user.findById(req.session.user_id).then(function(user) {
+               if (user) {
+                 console.log("User logged in as " + user.username);
+                 req.currentUser = res.locals.currentUser = user;
+               }
+               next();
+             });
+           } else {
+             next();
+           }
+         });
+
+         var roles = require('./roles');
+         app.use(roles.middleware({ userProperty: 'currentUser' }));
+       #+END_SRC
+     - And start up our admin section
+       #+BEGIN_SRC js
+         // routes/admin.js
+
+         var express = require('express');
+         var router = express.Router();
+         var roles = require('../roles');
+
+         router.use(roles.can('access admin page'));
+
+         router.get('/', function(req, res) {
+           res.send('Hi admin!');
+         });
+
+         module.exports = router;
+       #+END_SRC
+       #+BEGIN_SRC js
+         // routes.js
+         app.use('/admin', require('./routes/admin'));
+       #+END_SRC
+** ??
+
+* Advanced JS
+
+   - Lodash/functional
+   - Promises
+   - Integration testing?
+   - Other bits?
+   - Build tools/processes
+   - ES6/babel/??
+
