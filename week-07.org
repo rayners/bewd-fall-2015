@@ -479,7 +479,19 @@
          // routes.js
          app.use('/admin', require('./routes/admin'));
        #+END_SRC
-** ??
+** Programming project
+
+   Implement an administrative user list with the ability to prevent a
+   user from logging in to your service. The end result is that you
+   should be able to keep me (username=rayners) from logging in.
+
+   We'll do Show and Tells on Wednesday.
+
+* Wednesday
+** Show and Tells!
+
+   What'd you do? How'd you do it? Why'd you do it that way? What were
+   you thinking?!
 
 * Advanced JS
 
