@@ -491,7 +491,62 @@
 ** Show and Tells!
 
    What'd you do? How'd you do it? Why'd you do it that way? What were
-   you thinking?!
+   you thinking?! Two volunteers please step forward.
+
+** Send emails
+
+   Install the [[https://elements.heroku.com/addons/sparkpost][SparkPost]] add-on
+
+   You should know how to send emails by now, right? You've been doing
+   it for years!
+
+   Well, maybe not sending it through an app.
+
+** Email verification
+
+    How can we keep our applications free from abuse? Hell if I know!
+    People are *still* working on that one.
+
+    Disabling users is a good place to start. We've done that. That's
+    something to handle shenanigans after the fact, but there are also
+    some preventative measures we can take. Specifically, we can have
+    our application verify that a user is who they say they are. The
+    only bit of personal information we are currently asking for is
+    email address, so that's all we can check. It's not much, but it's
+    absolutely a step in the right direction!
+
+    First we'll work out where in the code to send the email, and then
+    the how.
+
+** Hooks!
+
+   [[http://docs.sequelizejs.com/en/latest/docs/hooks/][Sequelize Hooks]]
+
+   Sequelize, as well as most ORMs, gives us ways to run code during
+   various parts of the database/model lifecycle. Specifically, we
+   want to send the user a verification email *after* the record is
+   created: =afterCreate=
+
+   Steps we need to implement:
+
+   - Create a random string when a user is created
+   - Send them an email with a link to a verification url including
+     that random string when the user is created
+   - Implement the handler for that url
+     - Marks the user as having a verified email address
+     - Logs them if if they aren't already
+
+** Other sorts of emails
+
+   Frank is a lazy user. He hasn't visited the site in a week and five
+   games are waiting for his turn. How should that be handled? Send
+   him a reminder email or emails? Mark the games as forfeited? Send
+   him reminders now and if he *still* hasn't taken a turn in a week,
+   then mark as forfeited?
+
+   - Create a new script to handle this action:
+     scripts/whatever_your_action_is
+   - Use the [[https://elements.heroku.com/addons/scheduler][Scheduler]] add-on to have it run periodically
 
 * Advanced JS
 
