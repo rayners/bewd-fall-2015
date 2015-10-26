@@ -1,0 +1,170 @@
+* Review
+
+  - What have we done so far?
+
+** Week 1
+
+   - curl
+   - node
+   - mocha/chai and tests
+
+** Week 2
+
+   - modules
+   - npm packages
+   - express
+   - GET requests
+   - jade
+   - "views"
+   - GET query parameters
+   - bower
+   - bootstrap
+   - "static assets"
+   - POST requests
+   - POST bodies
+   - redirects
+   - Angular
+   - =ng-app=
+   - jade includes
+   - Angular interpolation (={{ ... }}=)
+   - =ng-init=
+   - Angular variables/data
+   - Angular data binding
+   - Angular digest cycle/updates
+   - =ng-click=
+   - =ng-repeat=
+   - bootstrap forms
+   - =ng-model=
+   - =ng-repeat= with =filter=
+   - Angular controller
+   - Angular directive and scopes
+   - Angular modules
+
+** Week 3
+
+   - =package.json= and =main=
+   - Databases
+   - ORMs
+   - Sequelize
+   - git
+   - creating models
+   - database migrations
+   - sqlite
+   - =<model>.findAll=
+   - promises
+   - model column getters
+   - =<model>.create=
+   - =<model>.findById=
+   - url in express with parameters (=:game_id=)
+   - model column validations
+   - model creation with a POST
+
+** Week 4
+
+   - sequence diagram
+   - gulp
+   - gulp tasks and gulp server
+   - cookies
+   - setting in express
+   - reading in express
+   - cookie vulnerability
+   - =cookie-parser=
+   - sessions
+   - updating sessions
+   - user model
+   - what a user needs
+   - registration page
+   - login page
+   - password input type
+   - logout page
+   - programming principles
+   - mostly avoid repetition and deep cross-module knowledge
+   - eslint
+   - layouts with jade (via =extends=)
+   - =res.locals=
+
+** Week 5
+
+   - Adding a column with migrations
+   - gulp default task
+   - HTML required input
+   - =ng-model-options=
+   - blur, debounce
+   - =<formname>.<inputname>.$invalid=, =.$dirty=, =.$error=
+   - =ng-if=
+   - angular-messages
+   - =ng-messages=
+   - =ng-message=
+   - Angular directive for input validation
+   - directive =require= and =link=
+   - =<ctrl>.$validators.<validationname>=
+   - =ng-class=
+   - =<model>.findOne=
+   - =res.json=
+   - model class methods
+   - =<ctrl>.$asyncValidators.<validationname>=
+   - =$http=, =$q=
+   - dependency injection
+   - content negotiation
+   - =Accept: application/json= header
+   - =res.format=
+   - optional route parameter (=.:format?=)
+
+** Week 6
+
+   - jade vs angular
+   - git tools
+   - MVC
+   - model associations
+   - more migrations
+   - model scopes
+   - mode association methods (=setXPlayer=, =addXPlayer=, ...)
+
+** Week 7
+
+   - heroku
+   - =package.json= scripts: =start=, =postinstall=
+   - =process.env.<VARNAME>=
+   - setting up redis
+   - postgres and production databases
+   - deep into migrations (table renaming)
+   - authorization (=connect-roles=)
+   - emails
+   - sparkpost
+   - model lifecycle hooks (=beforeCreate=, =afterCreate=)
+
+* SPA Day
+
+** What is it?
+
+  SPA it short for Single Page Application
+
+  - What does that mean to you?
+  - Can you think of any examples of Single Page Applications?
+  - What do you think the benefits would be? The trade-offs?
+
+** What are we going to cover?
+
+   - Angular routing with =ng-view= and =$route=
+   - Angular module =run= and =config= 
+   - Application state
+   - Using 3rd party angular components
+   - Building out your backend API
+
+** What are we *not* going to cover?
+
+   - Alternative routers (=ui-router=)
+   - ??
+
+** Implementing a single page application with Angular
+
+   It's similar to how we are using Jade for layouts. You need to
+   build a shell for the application in HTML and add a tag for where
+   to render your application content. That tag is =ng-view=.
+
+* Single Page Applications
+
+   - Using APIs
+   - Building an API
+   - Managing state and routing
+
