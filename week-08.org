@@ -1,3 +1,5 @@
+#+OPTIONS: toc:nil
+
 * Review
 
   - What have we done so far?
@@ -216,7 +218,7 @@
    application, and the other parts are then hidden/removed.
 
    #+BEGIN_SRC js
-     angular.module('bewd.tictactoe')
+     angular.module('bewd.tictactoe', ['ngRoute'])
          .config(function($routeProvider) {
              $routeProvider.when('/a/b/c', {
                  controller: 'ABCController',
