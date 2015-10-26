@@ -162,6 +162,73 @@
    build a shell for the application in HTML and add a tag for where
    to render your application content. That tag is =ng-view=.
 
+   With that tag in place, you can now use =$routeProvider= in a
+   config function to setup your routes.
+
+** Config function? What?
+
+   Angular modules, in addition to being able to define services
+   (factories, etc), controllers, directives, and filters, can also
+   attach functions to two main parts of the angular lifecycle.
+
+   - config :: when the Angular code is being loaded and prepped
+   - run :: when the Angular code *has* been loaded and is starting
+
+   These functions are just like any other injectable Angular
+   functions, where Angular looks at the argument names and fills them
+   in for you (with some exceptions for the =config= functions).
+
+   What's special about config functions is that you can use them to,
+   amazingly enough, configure some of the services that Angular (or
+   you!) provide. Routes is one example of that.
+
+** What are routes? Where did =$routeProvider= come from?
+
+   Angular services, factories, values, and constants (the stuff other
+   than controllers and directives) are really just syntactic sugar
+   (i.e., a shorthand or easier way of writing) over a core type of
+   object called a provider.
+
+   The Angular routing service is called =$route=, and when passed to
+   a config function, you ask for it with the name =$routeProvider=
+   because it is the provider of the =$route= service. Providers allow
+   you to access the code in a service before that service is created
+   and prepped for running in your Angular application.
+
+   Other provider examples:
+
+   - =$logProvider= :: configure whether or not debug log messages are
+        displayed to the user
+   - =$httpProvider= :: configure default headers and other behavior
+   - =$cookieProvider= :: default properties for newly created cookies
+
+   As for routes, routes in Angular are *very* similar to routes in
+   Express. The urls are slightly different. Instead of using "pure"
+   urls, Angular attaches its route handling to the location hash. The
+   hash, or fragment identifier, is a web-ish way to link to a
+   particular part of a page:
+
+     - http://some.example.site/fancyPage.html#section_A_third_paragraph
+
+   So, in a way, Angular is using it "correctly" if a little
+   oddly. Angular does use it to link to particular parts of the
+   page. It just happens that those parts are in a single page
+   application, and the other parts are then hidden/removed.
+
+   #+BEGIN_SRC js
+     angular.module('bewd.tictactoe')
+         .config(function($routeProvider) {
+             $routeProvider.when('/a/b/c', {
+                 controller: 'ABCController',
+                 controllerAs: 'vm',
+                 templateUrl: 'a/b/c/template.html'
+             });
+             $routeProvider.otherwise({
+                 redirectTo: '/a/b/c'
+             });
+         });
+   #+END_SRC
+
 * Single Page Applications
 
    - Using APIs
