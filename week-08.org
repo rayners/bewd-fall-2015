@@ -231,6 +231,192 @@
          });
    #+END_SRC
 
+* Telling Stories
+
+  Designing the application by writing stories.
+
+* Testing, Injecting, and Super SPAs
+
+  One of the wonderful parts of Angular is its usage of Dependency
+  Injection. We've talked about it before with regards to how easy
+  testable it makes Angular code.
+
+  For example, if we were to write a test for the =BoardController=
+  controller.
+
+  There are a couple tools we will need to install first:
+
+    - =mocha= (remember??)
+    - =chai= (remember??)
+    - =karma=
+    - =karma-mocha=
+
+  Install them all with =npm install --save-dev ...= then run
+  =./node_modules/.bin/karma init= to kick start the configuration for
+  karma.
+
+  #+BEGIN_SRC shell
+    ~/Code/tictactoe (git)-[master]U % ./node_modules/.bin/karma init
+
+    Which testing framework do you want to use ?
+    Press tab to list possible options. Enter to move to the next question.
+    > mocha
+
+    Do you want to use Require.js ?
+    This will add Require.js plugin.
+    Press tab to list possible options. Enter to move to the next question.
+    > no
+
+    Do you want to capture any browsers automatically ?
+    Press tab to list possible options. Enter empty string to move to the next question.
+    > Chrome
+    > PhantomJS
+    > Safari
+    >
+
+    What is the location of your source and test files ?
+    You can use glob patterns, eg. "js/*.js" or "test/**/*Spec.js".
+    Enter empty string to move to the next question.
+    > public/js/**/*.js
+    > test/**/*-spec.js
+    27 10 2015 22:57:06.101:WARN [init]: There is no file matching this pattern.
+
+    >
+
+    Should any of the files included by the previous patterns be excluded ?
+    You can use glob patterns, eg. "**/*.swp".
+    Enter empty string to move to the next question.
+    >
+
+    Do you want Karma to watch all the files and run the tests on change ?
+    Press tab to list possible options.
+    > yes
+
+
+    Config file generated at "/Users/draynes14/Code/tictactoe/karma.conf.js".
+  #+END_SRC
+
+  That will generate a file that looks something like the following:
+
+  #+BEGIN_SRC js
+    // Karma configuration
+    // Generated on Tue Oct 27 2015 22:57:19 GMT-0400 (EDT)
+
+    module.exports = function(config) {
+      config.set({
+
+        // base path that will be used to resolve all patterns (eg. files, exclude)
+        basePath: '',
+
+
+        // frameworks to use
+        // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
+        frameworks: ['mocha'],
+
+
+        // list of files / patterns to load in the browser
+        files: [
+          'public/js/**/*.js',
+          'test/**/*-spec.js'
+        ],
+
+
+        // list of files to exclude
+        exclude: [
+        ],
+
+
+        // preprocess matching files before serving them to the browser
+        // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
+        preprocessors: {
+        },
+
+
+        // test results reporter to use
+        // possible values: 'dots', 'progress'
+        // available reporters: https://npmjs.org/browse/keyword/karma-reporter
+        reporters: ['progress'],
+
+
+        // web server port
+        port: 9876,
+
+
+        // enable / disable colors in the output (reporters and logs)
+        colors: true,
+
+
+        // level of logging
+        // possible values: config.LOG_DISABLE || config.LOG_ERROR || config.LOG_WARN || config.LOG_INFO || config.LOG_DEBUG
+        logLevel: config.LOG_INFO,
+
+
+        // enable / disable watching file and executing tests whenever any file changes
+        autoWatch: true,
+
+
+        // start these browsers
+        // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
+        browsers: ['Chrome', 'PhantomJS', 'Safari'],
+
+
+        // Continuous Integration mode
+        // if true, Karma captures browsers, runs the tests and exits
+        singleRun: false,
+
+        // Concurrency level
+        // how many browser should be started simultanous
+        concurrency: Infinity
+      })
+    }
+  #+END_SRC
+
+  With that in place, run =./node_modules/.bin/karma start= from the
+  command line and back away.
+
+  There are errors! How should we fix them?
+
+  Right! That thing. Go do that.
+
+  Now we just need a couple more things: =angular-mocks= and
+  =karma-chai=. Install =angular-mocks= with bower and add that
+  too. It's code that Angular can use to make testing simpler.
+
+** An honest to goodness test for Angular code
+
+   #+BEGIN_SRC js
+     describe('BoardController', function() {
+       // this tells angular to automatically load the
+       // bewd.tictactoe.board module
+       beforeEach(module('bewd.tictactoe.board'));
+
+       // the inject function handles the passed function
+       // by tying it into angular's injection mechanisms
+       it('should load the board for the current route', inject(function($controller, $httpBackend) {
+         // this instructs angular to handle a GET request for the given url
+         // with the given response
+         $httpBackend.whenGET('/games/1').respond(200, { board: [['X', 'X', 'X'], [ 'O', 'O', 'O' ], ['X', 'O', 'X' ]] });
+
+         // $controller is used to create an instance of the controller
+         // the second parameter we can use to override what the controller
+         // is expecting from angular
+         var boardController = $controller('BoardController', { $routeParams: { id: 1 }});
+
+         // make all the requests resolve themselves
+         $httpBackend.flush();
+
+         // And check that the request result was properly handled
+         boardController.theBoard.should.deep.equal([['X', 'X', 'X'], [ 'O', 'O', 'O' ], ['X', 'O', 'X' ]]);
+       }));
+     });
+
+   #+END_SRC
+
+   - What are your thoughts about this test?
+   - How could we improve it?
+   - What other conditions do we need to test for?
+   - Anything else?
+
 * Single Page Applications
 
    - Using APIs
