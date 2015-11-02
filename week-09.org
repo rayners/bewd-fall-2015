@@ -1,0 +1,21 @@
+* Applications you like
+** What are they?
+** What problem do they solve?
+** Why do you like them?
+* Applications you want to build
+** Defining the problem
+** Determine your audience
+** Write a couple BIG stories
+* Gulp test task
+
+* Other thoughts
+** Advanced Browser Features
+
+    - Location
+
+** Deeper into SPAs?
+** 3rd party controls
+** Location & Google Maps
+** ??
+** Debugging tools
+
