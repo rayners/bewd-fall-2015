@@ -1,5 +1,5 @@
 * Class notes
-  - Conference Room on Friday
+  - Conference Room on Wednesday
   - Start app building the week before Thanksgiving (and no class the week /of/ Thanksgiving)
   - TA starting on Wednesday
   - Refresh Baltimore talk from Jason Rhodes on 11/19: How to Succeed with JavaScript Without Really Trying*
