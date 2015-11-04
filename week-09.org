@@ -25,6 +25,10 @@
 
 
 * TDD!
+** Why TDD?
+   - What is needed for TDD?
+   - What benefits do you think it provides?
+   - Any drawbacks?
 ** Epic/Feature: Users!
 
    Break it down. What is needed to really build users into our application?
