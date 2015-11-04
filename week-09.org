@@ -13,6 +13,25 @@
 ** Determine your audience
 ** Write a couple BIG stories
 * Gulp test task
+* More single page applications
+  - Partials (using jade on the backend)
+  - Routing events
+  - Form submitals and promises
+  - =$rootScope=
+  - Routes and controllers
+* Homework
+  - Big stories for your app
+  - Rough list of angular routes to implement
+
+
+* TDD!
+** Epic/Feature: Users!
+
+   Break it down. What is needed to really build users into our application?
+
+   - User list
+   - User search
+   - User profile
 
 * Other thoughts
 ** Advanced Browser Features
