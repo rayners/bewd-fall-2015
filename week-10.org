@@ -180,12 +180,24 @@
   
   The comparison above demonstrates that once you go beyond using single selectors, jQuery provides a far more elegant and easy to read solution for element retrieval.
   
+  Also, jQuery is even more elegant for DOM manipulation, as seen here
+  
+  | 1 line in jQuery | 4 lines in DOM |
+  |-+-|
+  | =$('body').append('<h1>Big Head!</h1>')= | =var heading = document.createElement("h1");= |
+  | | =var heading_text = document.createTextNode("Big Head!");= |
+  | | =heading.appendChild(heading_text);= |
+  | | =document.body.appendChild(heading);= |
+  
   And jQuery also allows you to easily manipulate or handle events for those retrieved elements, with methods like
   
   * =elements.addClass('class1 class2')= - add the specified class to each element retrieved
   * =elements.toggleClass('active')= - add the class to each element if it's not there, remove it if it is
+  * =elements.append(newElement)= - append the newElement to each element within elements
   * =elements.each(function)= - execute the given function on each element
   * =elements.click(function)= - binds the function to each element, so when a particular element is clicked, the function gets ran
+  
+  The jQuery API has a lot to it ([[http://api.jquery.com/][see the full list of methods here]) and can be overwhelming. But the main pages to get started with are [[http://api.jquery.com/category/selectors/][selectors]], [[http://api.jquery.com/category/css/][CSS]], [[manipulation][http://api.jquery.com/category/manipulation/], and [[http://api.jquery.com/category/events/][events]]
 
 
 * Packaging for the web
