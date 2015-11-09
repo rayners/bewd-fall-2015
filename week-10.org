@@ -1,0 +1,76 @@
+* jQuery, DOM, and selectors
+* Packaging for the web
+  "Push less over fewer connections"
+
+  Right now, my version of the application loads about 1.5 MB of data in about ~300 ms.
+
+  - What are some ways we can push less bits over fewer connections?
+
+** Combine our JS files!
+
+   - =npm install --save gulp-concat=
+
+   #+BEGIN_SRC js
+     var webFiles = ['js/**/*.js'];
+     var concat = require('gulp-concat');
+     gulp.task('build', function() {
+       return gulp.src(webFiles)
+         .pipe(concat('tictactoe.js'))
+         .pipe(gulp.dest('public/dist'));
+     });
+   #+END_SRC
+
+** Squish them!
+
+   - =npm install --save gulp-uglify=
+
+   #+BEGIN_SRC js
+     var concat = require('gulp-concat'),
+       uglify = require('gulp-uglify');
+     gulp.task('build', function() {
+       return gulp.src(webFiles)
+         .pipe(concat('tictactoe.js'))
+         .pipe(uglify())
+         .pipe(gulp.dest('public/dist'));
+     });
+   #+END_SRC
+
+   #+BEGIN_SRC shell
+     ~/Code/tictactoe (git)-[master]U % gulp build
+     [23:26:53] Using gulpfile ~/Code/tictactoe/gulpfile.js
+     [23:26:53] Starting 'build'...
+     [23:26:53] Finished 'build' after 30 ms
+     ~/Code/tictactoe (git)-[master]U % ls -l public/dist
+     total 24
+     -rw-r--r--  1 draynes14  AOL\Domain Users  5014 Nov  8 23:26 tictactoe.js
+   #+END_SRC
+
+   #+BEGIN_SRC shell
+     ~/Code/tictactoe (git)-[master]U % gulp build
+     [23:27:41] Using gulpfile ~/Code/tictactoe/gulpfile.js
+     [23:27:41] Starting 'build'...
+     [23:27:41] Finished 'build' after 167 ms
+     ~/Code/tictactoe (git)-[master]U % ls -l public/dist
+     total 16
+     -rw-r--r--  1 draynes14  AOL\Domain Users  4351 Nov  8 23:27 tictactoe.js
+   #+END_SRC
+
+   Not a ton of reduced space, but also note that we have almost
+   /zero/ comments in our code, which would be one of the main things
+   removed in the squishing.
+
+** Any downsides?
+
+   - Debugging!
+
+* Topic TBD
+
+    - Less?
+    - Canvas
+    - d3
+    - Web sockets
+    - Touch events
+    - HTML 5 video/audio
+    - Advanced CSS
+    - Backend jobs/distributed processing/message queues
+
