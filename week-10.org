@@ -1,4 +1,193 @@
-* jQuery, DOM, and selectors
+* Document Object Model, CSS Selectors, jQuery
+
+** Brief Definitions
+
+*** Document Object Model (DOM)
+
+  Standardized, cross-platform represenation of an HTML document with methods to interact with the HTML
+
+*** CSS Selectors
+
+  Identifier or identifiers used to select an element or elements within the DOM to manipulate it or style it
+  
+*** jQuery
+
+  JavaScript library which simplifies DOM manipulation, event handling, and more
+
+
+** Document Object Model (DOM)
+
+  The DOM represents an HTML page and can be accessed with any programming language, though it is most often accessed through client side JavaScript.
+  
+  This example is shamelessly stolen from [[https://developer.mozilla.org/en-US/docs/Web/API/Document_Object_Model/Introduction][Mozilla Developer Network]].
+  
+  #+BEGIN_SRC js
+    <script>
+      window.onload = function() {
+        // create a couple of elements in an otherwise empty HTML page
+        var heading = document.createElement("h1");
+        var heading_text = document.createTextNode("Big Head!");
+        heading.appendChild(heading_text);
+        document.body.appendChild(heading);
+      }
+    </script>
+  #+END_SRC
+
+  The above example demonstrates a few key components: =window=, =document=, elements, and methods ([[https://developer.mozilla.org/en-US/docs/Web/API/Document_Object_Model][see more here]])
+
+*** =window=
+
+  The =window= element can be thought of as the browser.  With =window=, a few things you can do are
+  
+  * =window.onload= - see if a page is loading
+  * =window.alert= - create alerts
+  * =window.navigator= - check a user's browser
+  
+*** =document=
+  The =document= object is the root of the entire HTML page. With =document=, a few things you'll likely do are
+  
+  * =document.body= - access the =<body>= element of the document
+  * =document.createElement= - create an HTML element
+  * =document.getElementsByTagName('tag')= - get all the elements with a specific tag
+  * =document.getElementById('id')= - get the unique element with specific ID
+  * =document.getElementsByClassName('class')= - get all the elements with a specific class
+
+*** Elements
+
+  Elements are what make up the DOM. Any HTML tag is considered an element. This includes body and head, which are accessed from the =document= with =document.body= and =document.head=. Common element methods include
+  
+  * =element.getElementsByTagName= - get all the child elements with a specific tag
+  * =element.getElementsByClassName= - get all the child elements with a specific class
+  * =element.appendChild= - once you have created an element or retrieved one, you can append it at the end of another element with this method
+  * =element.getAttribute= - once you have an element, you can check its attributes with this method
+  
+  Note: There is no =element.getElementById= because if you're getting an element by its ID, you should just should the =document= method
+
+** CSS Selectors
+
+  CSS (Cascading Style Sheets) are used to style HTML pages. That typically looks like
+  
+  #+BEGIN_SRC css
+    /* This entire code block is a rule */
+    tag#id.class[attribute="target"] { /* Selectors */
+      property: value; /* Styling declaration(s) */
+    }
+    
+    /* More specific example */
+    form#profile.red[method="post"] {
+      color: white;
+    }
+  #+END_SRC
+  
+  And the above code would style HTML which looks like
+  
+  #+BEGIN_SRC html
+    <tag class="class" id="id" attribute="target">...</tag>
+    <form class="red" id="profile" method="post">...</form> 
+  #+END_SRC
+  
+  There are a confusing amount of CSS selectors ([[http://code.tutsplus.com/tutorials/the-30-css-selectors-you-must-memorize--net-16048][see more here]]) but we'll just cover a few essentials: =tag=, =ID=, =class=, =attribute=, and =descendant=.
+
+*** tag-selector
+
+  The tag selector targets any HTML element with that particular.
+  
+  #+BEGIN_SRC css
+    p {
+      property: value;
+    }
+  #+END_SRC
+  
+  #+BEGIN_SRC html
+    <p>...</p> 
+  #+END_SRC
+  
+*** #id-selector
+
+  The ID selector is meant to be unique on the page. No HTML element should share an ID with another element. Each element should only house one ID.
+  
+  #+BEGIN_SRC css
+    #sidebar {
+      property: value;
+    }
+  #+END_SRC
+  
+  #+BEGIN_SRC html
+    <div id="sidebar">...</div> 
+  #+END_SRC
+
+*** .class-selector
+
+  Like the tag selector, the class selector can be used on multiple elements on the page. Any element can house multiple classes
+  
+  #+BEGIN_SRC css
+    .menu-item {
+      property: value;
+    }
+  #+END_SRC
+  
+  #+BEGIN_SRC html
+    <div class="menu-item red">...</div> 
+    <div class="menu-item blue">...</div> 
+  #+END_SRC
+
+*** [attribute="selector"]
+
+  The attribute selector can also be used on multiple HTML elements. Anything that isn't the tag of an element is an attribute.
+  
+  #+BEGIN_SRC css
+    .menu-item {
+      property: value;
+    }
+  #+END_SRC
+    
+  #+BEGIN_SRC html
+    <div class="menu-item red">...</div> 
+    <div class="menu-item blue">...</div> 
+  #+END_SRC
+
+  Interesting note: You could use the attribute selector to target classes and IDs but that would be inconvenient.
+
+*** .descendant .selector
+
+  The above selectors can all be used individually or they can be used in combination, like with the descendant selector.
+  
+  This selector is used for targeting elements which are nested inside other elements.
+
+  #+BEGIN_SRC css
+    #sidebar .menu-item {
+      property: value;
+    }
+  #+END_SRC
+    
+  #+BEGIN_SRC html
+    <div id="sidebar">
+      <div class="menu-item red">...</div> 
+      <div class="menu-item blue">...</div>
+    </div>
+  #+END_SRC
+
+** jQuery
+
+  jQuery is a JavaScript library that combines DOM manipulation and event handling with the ease of CSS selectors. So instead of writing =document.get...= every time, you can use the simpler jQuery =$()= function call to retrieve elements and then manipulate them.
+  
+  | jQuery Code | DOM Code |
+  |-+-|
+  | =$('div')= | =document.getElementsByTagName('div')= |
+  | =$('#sidebar')= | =document.getElementById('sidebar')= |
+  | =$('.menu-item')= | =document.getElementsByClassName('menu-item')= |
+  | =$('#sidebar .menu-item')= | =document.getElementById('sidebar').getElementsByClassName('menu-item')= |
+  
+  The comparison above demonstrates that once you go beyond using single selectors, jQuery provides a far more elegant and easy to read solution for element retrieval.
+  
+  And jQuery also allows you to easily manipulate or handle events for those retrieved elements, with methods like
+  
+  * =elements.addClass('class1 class2')= - add the specified class to each element retrieved
+  * =elements.toggleClass('active')= - add the class to each element if it's not there, remove it if it is
+  * =elements.each(function)= - execute the given function on each element
+  * =elements.click(function)= - binds the function to each element, so when a particular element is clicked, the function gets ran
+
+
 * Packaging for the web
   "Push less over fewer connections"
 
