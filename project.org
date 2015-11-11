@@ -1,0 +1,59 @@
+* Steps
+
+1. Build your app
+2. Demo for class (last day of class)
+3. ???
+4. Profit!
+
+* What kind of app?
+
+  Whatever you'd like! We've talked about some stuff in class
+  already. Please feel free to dig on in.
+
+* What do you demo?
+
+  Some combination of slides/talk and live app usage.
+
+** Components of the demo
+
+   - User stories!
+     - As close to a full list of the high level/30,000 ft ones
+     - A handful of the next level or two down (very specific, single
+       actions
+       - Especially the ones you plan to demonstrate with the app
+         itself.
+   - What did you use to build your app.
+     - You absolutely do *not* have to start from scratch like we did
+       for class. Please feel free to use any existing packages,
+       libraries, or seed projects, just be sure to mention it.
+   - What you built yourself
+     - Tell us about the code you wrote. Did you use any techniques we
+       covered in class? Did you need to go learn something additional
+       to make it work?
+     - Tell us about the problems you solved. What did you expect to
+       have to solve? What surprised you? What are you particular
+       proud of getting working?
+   - "Metrics" (could just be a single slide in your presentation if
+     you'd like)
+     - Total number of npm/bower packages used
+     - Total number of lines of code written
+     - Total number of lines of test written
+     - Coverage percentages
+       - Angular/front-end
+       - Express/back-end
+     - Total number of git commits
+     - Anything else you'd like to share
+
+** Outside of the demo itself
+
+   - Repository on GitHub (or elsewhere, if you have a strong
+     preference; it just needs to be available). And in that repository:
+     - Code (duh!)
+     - Tests
+       - Front-end unit tests
+       - Back-end unit tests
+       - Protractor integration tests
+     - Gulp (or other build system) setup
+
+   - Live application running in production somewhere. It doesn't have
+     to be on Heroku, but it has to /not/ be your laptop.
