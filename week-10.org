@@ -264,6 +264,54 @@
 
    - Debugging!
 
+
+* Regular Expressions
+* Angular and Google
+
+  What does Google index? What does it look for? It reads your page,
+  and follows the links in it.
+
+** HTML Push State!
+
+   Relatively new standard, but Google supports it and (as of
+   Oct 2015) recommends it! So how do we use it in Angular?
+
+*** Configuration
+
+    Angular needs to know to turn on its HTML 5 settings. That's just
+    a single function call.
+
+    #+BEGIN_SRC js
+      angular.module('bewd.tictactoe')
+          .config(function($locationProvider) {
+              $locationProvider.html5Mode(true);
+          });
+    #+END_SRC
+
+    The backend also needs some changes to support this new setup:
+
+    #+BEGIN_SRC js
+      // end of routes.js
+
+      app.get('/*', function(req, res) {
+        res.render('index');
+      });
+
+      module.exports = app;
+    #+END_SRC
+
+*** Usage
+
+    With that turned on, you can simply /remove/ all the =#= from the
+    urls in your single page application (e.g., you can change
+    =#/game/123= to simply =/game/123=).
+
+    You can even go /directly/ to =/game/123= and even refresh the
+    page. It'll look and seem to act like a "normal" web page, but
+    it's Angular working its magic.
+
+* Forms with files
+
 * Topic TBD
 
     - Less?
