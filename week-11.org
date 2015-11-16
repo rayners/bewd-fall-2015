@@ -1,4 +1,10 @@
-*** File Uploading
+* File Uploading, File Processing
+
+*** File Uploading (Local / Server)
+
+  The file uploading code used is adapted from [[http://thejackalofjavascript.com/uploading-files-made-fun/]],
+  
+  To start, run `npm install blueimp-file-upload-expressjs --save` within your app folder.
 
   Add the following code to `routes.js`
 
@@ -22,25 +28,16 @@
     };
 
     var uploader = require('blueimp-file-upload-expressjs')(options);
+    var fs = require('fs');
+    var User = require('../models').user;
 
     module.exports = function (router) {
-      router.get('/upload', function (req, res) {
-        uploader.get(req, res, function (obj) {
-          res.send(JSON.stringify(req));
-        });
-      });
-     
       router.post('/upload', function (req, res) {
         uploader.post(req, res, function (err, obj) {
-          res.send(JSON.stringify(obj));
+          res.json(obj);
         });
       });
-     
-      router.delete('/uploaded/files/:name', function (req, res) {
-        uploader.delete(req, res, function (obj) {
-          res.send(JSON.stringify(obj));
-        });
-      });
+      
       return router;
     }
   #+END_SRC
@@ -62,3 +59,84 @@
         br
         input(type="submit" name="submit" value="Submit")
   #+END_SRC
+
+  Then go to http://localhost:1337/upload-manager and try uploading a file.
+  
+  On the next page, you should see a JSON result with information pertaining to the file you just uploaded. We can use that information to process the file.
+  
+  
+*** File Processing
+
+  When users upload files, they want to see it used somehow. For our tic tac toe app, users will probably want to upload profile pictures, which means they'll want to see it attached to their profile. Or they'll upload boards, which they'll want to play on.
+  
+  For profile pictures, our processing will consist of getting the link to the uploaded image, and saving it our database.
+  
+  For boards, we will need to read the contents of the file.
+  
+  In either case, we need to use the JSON result to process it. This result is the `obj` argument in our functions. But the current result is a little unreadable, so go to [[http://json.parser.online.fr/beta/]] and paste in your result so you can read it and get the necessary information.
+  
+  Since we only ever upload one file at a time, we know the information is accessible from `obj.files[0]`, so let's create a variable for easier access. Within the `uploader.post` function, add
+  
+  #+BEGIN_SRC js
+    var file = obj.files[0];
+  #+END_SRC
+  
+  Before we continue, we need to split out the functionality of uploading boards from uploading pictures. We could use an if statement, but this keeps things more clean since pictures and text files are separate.
+  
+  So copy the `router.post` function and paste it just below. Change one route to point to `/upload-pic` and the other to point to `/upload-board`.
+  
+  Then go into `views/uploadManager.jade` and copy and paste the form code. Change one form's action attribute to point to `/upload-pic` and the other to point to `/upload-board`. To make it clear which form is which, either add a header to each, or change the value of the submit buttons.
+
+***** Processing Boards
+
+  To create a new board, from the uploaded file, we first need to get the path where the uploaded file is stored. We can do this by combining the upload directory and the file name. Once we have that, we can use the `fs` library to read the file.
+  
+  #+BEGIN_SRC js
+    var filePath = file.options.uploadDir + '/' + file.name;
+    fs.readFile(filePath, 'utf8', function (err, data) {
+      console.log(data);
+    });
+  #+END_SRC
+  
+  If you try uploading the file now, you can see the text of the uploaded file in your server logs.
+  
+  To change that, you just need to create a new board with that data. So replace the `console.log` line with `Board.create({ board: data });`
+  
+***** Processing Profile Pictures
+  
+  In order to link our profile image to our users, we need to first add a new field to our users model to store it, so generate a migration with `./node_modules/.bin/sequelize migration:create --name AddProfileImageUrl`. Then within that file add the following code
+  
+  #+BEGIN_SRC js
+    // in the up method
+    queryInterface.addColumn('Users', 'profileImageUrl', Sequelize.STRING);
+
+    // in the down method
+    queryInterface.removeColumn('Users', 'profileImageUrl');
+  #+END_SRC
+  
+  And within our User model, we need to add this new field
+  
+  #+BEGIN_SRC js
+    profileImageUrl: {
+      type: DataTypes.STRING,
+      defaultValue: '',
+    },
+  #+END_SRC
+  
+  Lastly, add this field to the attributes that we display on our `/users` route.
+  
+  With that done, we can continue processing our files.
+  
+  For images, we just need to get the URL of the file by using `file.url` and update our new field with that URL. So add the below code to our `/upload-pic` method.
+  
+  #+BEGIN_SRC js
+    User.find({ where: {id: req.currentUser.id} }).then(function (user) {
+      if (user) {
+        user.updateAttributes({
+          profileImageUrl: file.url,
+        });
+      }
+    });
+  #+END_SRC
+  
+  If you try uploading a picture with our form now, and then go to `/users`, you'll see that your user's new field will contain the URL of the image.
