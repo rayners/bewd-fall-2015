@@ -60,7 +60,7 @@
         input(type="submit" name="submit" value="Submit")
   #+END_SRC
 
-  Then go to [[http://localhost:1337/upload-manager]] and try uploading a file.
+  Then go to [[http://localhost:3000/upload-manager]] and try uploading a file.
   
   On the next page, you should see a JSON result with information pertaining to the file you just uploaded. We can use that information to process the file.
   
