@@ -1,4 +1,4 @@
-* File Uploading, File Processing
+* File Uploading, File Processing, AWS
 
 *** File Uploading (Local / Server)
 
@@ -60,7 +60,7 @@
         input(type="submit" name="submit" value="Submit")
   #+END_SRC
 
-  Then go to http://localhost:1337/upload-manager and try uploading a file.
+  Then go to [[http://localhost:1337/upload-manager]] and try uploading a file.
   
   On the next page, you should see a JSON result with information pertaining to the file you just uploaded. We can use that information to process the file.
   
@@ -140,3 +140,21 @@
   #+END_SRC
   
   If you try uploading a picture with our form now, and then go to =/users=, you'll see that your user's new field will contain the URL of the image.
+  
+  
+*** AWS
+
+  Since we're hosting our app on Heroku, we can't store our files locally. Fortunately, the package we're using has the ability to upload to AWS. All you have to do is change the =storage= field in =options= to
+  
+  #+BEGIN_SRC js
+    storage : {
+      type : 'aws',
+      aws : {
+        accessKeyId :  'XXXXXXXXXXXXXXXXXXXXXXXX',
+        secretAccessKey : 'XXXXXXXXXXXXXXXXXXXXXXXX',
+        bucketName : 'XXXXXXXXXXXXXXXXXXXXXXXX'
+      }
+    }
+  #+END_SRC
+  
+  And plug in the relevant information from your AWS account. File processing will be the same.
